@@ -6,9 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, CheckCircle2, Baby, Calendar, User, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Baby, Calendar, User, MapPin, Printer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { BirthCertificateDocument } from "./birth-certificate-document";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const steps = [
   { id: 'child', title: 'Child Details', icon: Baby },
@@ -21,6 +23,7 @@ const steps = [
 export function RegistrationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -95,48 +98,82 @@ export function RegistrationForm() {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   if (isSubmitted) {
     return (
-      <Card className="max-w-md w-full mx-auto text-center py-12 border-primary/20 bg-primary/5">
-        <CardHeader>
-          <div className="h-20 w-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="h-12 w-12 text-primary" />
-          </div>
-          <CardTitle className="text-3xl font-headline">Registration Successful</CardTitle>
-          <CardDescription className="text-lg">Reference ID: {generatedId}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground">
-            The birth certificate has been generated and is ready for verification. You can now download the official copy or return to overview.
-          </p>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-3">
-          <Button className="w-full h-12 text-lg">
-            Download Certificate
-          </Button>
-          <Button variant="outline" className="w-full" onClick={() => {
-            setIsSubmitted(false);
-            setCurrentStep(0);
-            setFormData({
-              firstName: '',
-              lastName: '',
-              gender: '',
-              weight: '',
-              dob: '',
-              time: '',
-              facility: '',
-              state: '',
-              lga: '',
-              motherName: '',
-              motherNin: '',
-              fatherName: '',
-              fatherNin: '',
-            });
-          }}>
-            Start New Registration
-          </Button>
-        </CardFooter>
-      </Card>
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <Card className="max-w-md w-full mx-auto text-center py-12 border-primary/20 bg-primary/5">
+          <CardHeader>
+            <div className="h-20 w-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="h-12 w-12 text-primary" />
+            </div>
+            <CardTitle className="text-3xl font-headline">Registration Successful</CardTitle>
+            <CardDescription className="text-lg">Reference ID: {generatedId}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              The birth certificate has been generated and is ready for verification. You can now download the official copy or return to overview.
+            </p>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button className="w-full h-12 text-lg" onClick={() => setIsPreviewOpen(true)}>
+              Download Certificate
+            </Button>
+            <Button variant="outline" className="w-full" onClick={() => {
+              setIsSubmitted(false);
+              setCurrentStep(0);
+              setFormData({
+                firstName: '',
+                lastName: '',
+                gender: '',
+                weight: '',
+                dob: '',
+                time: '',
+                facility: '',
+                state: '',
+                lga: '',
+                motherName: '',
+                motherNin: '',
+                fatherName: '',
+                fatherNin: '',
+              });
+            }}>
+              Start New Registration
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+          <DialogContent className="max-w-5xl w-[95vw] h-[90vh] overflow-y-auto p-0 gap-0 border-none bg-muted/30">
+            <DialogHeader className="p-6 bg-card border-b sticky top-0 z-50 flex flex-row items-center justify-between space-y-0 print:hidden">
+              <div>
+                <DialogTitle className="font-headline text-xl">Immediate Certificate Issuance</DialogTitle>
+                <p className="text-sm text-muted-foreground">Verified Record: {generatedId}</p>
+              </div>
+              <Button onClick={handlePrint} className="gap-2">
+                <Printer className="h-4 w-4" /> Print / Download PDF
+              </Button>
+            </DialogHeader>
+            <div className="p-4 md:p-8 bg-muted/20">
+              <BirthCertificateDocument 
+                data={{
+                  childName: `${formData.firstName} ${formData.lastName}`,
+                  dob: formData.dob || new Date().toLocaleDateString(),
+                  gender: formData.gender,
+                  placeOfBirth: formData.facility || localStorage.getItem('obrms_facility') || "General Hospital",
+                  motherName: formData.motherName,
+                  fatherName: formData.fatherName,
+                  regId: generatedId,
+                  dateRegistered: new Date().toISOString().split('T')[0]
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
     );
   }
 
