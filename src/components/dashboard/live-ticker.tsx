@@ -1,8 +1,8 @@
-
 "use client";
 
 import React from 'react';
 import { Activity, Baby, MapPin } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
 const regions = [
   { name: "Lagos", count: 42, trend: "+2.4%" },
@@ -44,5 +44,3 @@ export const LiveTicker = () => {
     </div>
   );
 };
-
-import { cn } from "@/lib/utils";

@@ -118,7 +118,7 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
     <nav className="flex flex-col gap-2">
       <Button 
         variant={activeTab === "overview" ? "secondary" : "ghost"} 
-        className={`justify-start gap-3 ${activeTab === "overview" ? "bg-primary/10 text-primary" : ""}`}
+        className={cn("justify-start gap-3", activeTab === "overview" && "bg-primary/10 text-primary")}
         onClick={() => {
           setActiveTab("overview");
           onItemClick?.();
@@ -128,7 +128,7 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
       </Button>
       <Button 
         variant={activeTab === "registration" ? "secondary" : "ghost"} 
-        className={`justify-start gap-3 ${activeTab === "registration" ? "bg-primary/10 text-primary" : ""}`}
+        className={cn("justify-start gap-3", activeTab === "registration" && "bg-primary/10 text-primary")}
         onClick={() => {
           setActiveTab("registration");
           onItemClick?.();
@@ -138,7 +138,7 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
       </Button>
       <Button 
         variant={activeTab === "states" ? "secondary" : "ghost"} 
-        className={`justify-start gap-3 ${activeTab === "states" ? "bg-primary/10 text-primary" : ""}`}
+        className={cn("justify-start gap-3", activeTab === "states" && "bg-primary/10 text-primary")}
         onClick={() => {
           setActiveTab("states");
           onItemClick?.();
@@ -148,7 +148,7 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
       </Button>
       <Button 
         variant={activeTab === "users" ? "secondary" : "ghost"} 
-        className={`justify-start gap-3 ${activeTab === "users" ? "bg-primary/10 text-primary" : ""}`}
+        className={cn("justify-start gap-3", activeTab === "users" && "bg-primary/10 text-primary")}
         onClick={() => {
           setActiveTab("users");
           onItemClick?.();
@@ -158,7 +158,7 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
       </Button>
       <Button 
         variant={activeTab === "alerts" ? "secondary" : "ghost"} 
-        className={`justify-start gap-3 ${activeTab === "alerts" ? "bg-primary/10 text-primary" : ""}`}
+        className={cn("justify-start gap-3", activeTab === "alerts" && "bg-primary/10 text-primary")}
         onClick={() => {
           setActiveTab("alerts");
           onItemClick?.();
@@ -198,9 +198,16 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const triggerRandomNotification = () => {
       const randomHospital = HOSPITALS[Math.floor(Math.random() * HOSPITALS.length)];
       const randomGender = Math.random() > 0.5 ? "Male" : "Female";
@@ -213,7 +220,11 @@ export default function AdminDashboard() {
 
     const intervalId = setInterval(triggerRandomNotification, 15000 + Math.random() * 10000);
     return () => clearInterval(intervalId);
-  }, [toast]);
+  }, [isMounted, toast]);
+
+  if (!isMounted) {
+    return null;
+  }
 
   // Sort stateData by births descending for charts, but alphabetically for breakdown
   const chartData = [...stateData].sort((a, b) => b.births - a.births).slice(0, 10);
