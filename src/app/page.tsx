@@ -1,16 +1,25 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Baby, Activity, ShieldCheck, Map, Users, Download, ArrowRight, ClipboardCheck, Globe } from "lucide-react";
+import { Baby, Activity, ShieldCheck, Map, Users, Download, ArrowRight, ClipboardCheck, Globe, Menu } from "lucide-react";
 import Link from "next/link";
 import { RollingCounter } from "@/components/dashboard/rolling-counter";
 import { LiveTicker } from "@/components/dashboard/live-ticker";
 import { PerSecondCounter } from "@/components/dashboard/per-second-counter";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-nigeria');
+
+  const NavLinks = ({ className }: { className?: string }) => (
+    <nav className={className}>
+      <Link href="/analytics" className="text-sm font-medium hover:text-primary transition-colors">National Analytics</Link>
+      <Link href="/portal/parents" className="text-sm font-medium hover:text-primary transition-colors">Parent Portal</Link>
+      <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">Resources</Link>
+    </nav>
+  );
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -31,18 +40,51 @@ export default function Home() {
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Online Birthrate Monitoring System</span>
             </div>
           </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/analytics" className="text-sm font-medium hover:text-primary transition-colors">National Analytics</Link>
-            <Link href="/portal/parents" className="text-sm font-medium hover:text-primary transition-colors">Parent Portal</Link>
-            <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">Resources</Link>
-          </nav>
+
+          {/* Desktop Nav */}
+          <NavLinks className="hidden md:flex items-center gap-8" />
+
           <div className="flex items-center gap-4">
-            <Button variant="outline" asChild>
-              <Link href="/login">Administration Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/login">New Registration</Link>
-            </Button>
+            <div className="hidden sm:flex items-center gap-2">
+              <Button variant="outline" asChild size="sm">
+                <Link href="/login">Administration Login</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link href="/login">New Registration</Link>
+              </Button>
+            </div>
+
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetHeader className="text-left mb-8">
+                  <SheetTitle className="font-headline font-bold text-primary">OBRMS Menu</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-6">
+                  <Link href="/analytics" className="text-lg font-medium hover:text-primary transition-colors flex items-center gap-3">
+                    <Activity className="h-5 w-5" /> National Analytics
+                  </Link>
+                  <Link href="/portal/parents" className="text-lg font-medium hover:text-primary transition-colors flex items-center gap-3">
+                    <Users className="h-5 w-5" /> Parent Portal
+                  </Link>
+                  <Link href="/about" className="text-lg font-medium hover:text-primary transition-colors flex items-center gap-3">
+                    <ClipboardCheck className="h-5 w-5" /> Resources
+                  </Link>
+                  <hr className="border-border" />
+                  <Button variant="outline" asChild className="w-full justify-start">
+                    <Link href="/login">Administration Login</Link>
+                  </Button>
+                  <Button asChild className="w-full justify-start">
+                    <Link href="/login">New Registration</Link>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
