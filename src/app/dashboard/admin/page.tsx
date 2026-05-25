@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -9,7 +9,7 @@ import {
 } from 'recharts';
 import { 
   Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, 
-  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2, Printer, Eye, FileText
+  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2, Printer, Eye, FileText, Check
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -77,7 +77,8 @@ const mockSubmissions = [
     gender: "Male",
     motherName: "Blessing Adeyemi",
     fatherName: "Olumide Adeyemi",
-    dateRegistered: "2026-02-24"
+    dateRegistered: "2026-02-24",
+    zone: "Western"
   },
   { 
     facility: "NIMASA SAR Base Clinic", 
@@ -89,7 +90,8 @@ const mockSubmissions = [
     gender: "Female",
     motherName: "Ifunanya Okoro",
     fatherName: "Chidi Okoro",
-    dateRegistered: "2026-02-24"
+    dateRegistered: "2026-02-24",
+    zone: "Western"
   },
   { 
     facility: "AB Health Consortium Ltd", 
@@ -101,7 +103,8 @@ const mockSubmissions = [
     gender: "Male",
     motherName: "Ngozi Nwachukwu",
     fatherName: "Emeka Nwachukwu",
-    dateRegistered: "2026-02-23"
+    dateRegistered: "2026-02-23",
+    zone: "Eastern"
   },
 ];
 
@@ -246,7 +249,8 @@ export default function AdminDashboard() {
   const [allSubmissions, setAllSubmissions] = useState<any[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [isCertOpen, setIsCertOpen] = useState(false);
-  const [certSearchQuery, setCertSearchQuery] = useState("");
+  const [globalSearchQuery, setGlobalSearchQuery] = useState("");
+  const [selectedZones, setSelectedZones] = useState<string[]>([]);
   const [userName, setUserName] = useState("Administrator");
   const { toast } = useToast();
 
@@ -263,7 +267,6 @@ export default function AdminDashboard() {
     }
     loadData();
 
-    // Listen for data updates from other components
     const handleUpdate = () => loadData();
     window.addEventListener('obrms_data_update', handleUpdate);
     return () => window.removeEventListener('obrms_data_update', handleUpdate);
@@ -282,9 +285,22 @@ export default function AdminDashboard() {
       });
     };
 
-    const intervalId = setInterval(triggerRandomNotification, 20000 + Math.random() * 15000);
+    const intervalId = setInterval(triggerRandomNotification, 40000 + Math.random() * 20000);
     return () => clearInterval(intervalId);
   }, [isMounted, toast]);
+
+  const filteredSubmissions = useMemo(() => {
+    return allSubmissions.filter(sub => {
+      const matchesSearch = 
+        sub.childName.toLowerCase().includes(globalSearchQuery.toLowerCase()) ||
+        sub.id.toLowerCase().includes(globalSearchQuery.toLowerCase()) ||
+        sub.facility.toLowerCase().includes(globalSearchQuery.toLowerCase());
+      
+      const matchesZone = selectedZones.length === 0 || selectedZones.includes(sub.zone || "Western");
+
+      return matchesSearch && matchesZone;
+    });
+  }, [allSubmissions, globalSearchQuery, selectedZones]);
 
   if (!isMounted) {
     return null;
@@ -299,10 +315,11 @@ export default function AdminDashboard() {
     setIsCertOpen(true);
   };
 
-  const filteredCertificates = allSubmissions.filter(cert => 
-    cert.childName.toLowerCase().includes(certSearchQuery.toLowerCase()) ||
-    cert.id.toLowerCase().includes(certSearchQuery.toLowerCase())
-  );
+  const toggleZone = (zone: string) => {
+    setSelectedZones(prev => 
+      prev.includes(zone) ? prev.filter(z => z !== zone) : [...prev, zone]
+    );
+  };
 
   const sortedStates = [...stateData].sort((a, b) => a.name.localeCompare(b.name));
 
@@ -334,7 +351,12 @@ export default function AdminDashboard() {
             </Sheet>
             <div className="hidden sm:flex items-center gap-4 w-full">
               <Search className="h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search records, states, or IDs..." className="border-none bg-transparent h-10 px-0 focus-visible:ring-0" />
+              <Input 
+                placeholder="Real-time search across records..." 
+                className="border-none bg-transparent h-10 px-0 focus-visible:ring-0" 
+                value={globalSearchQuery}
+                onChange={(e) => setGlobalSearchQuery(e.target.value)}
+              />
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
@@ -383,7 +405,39 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20">LIVE MONITORING</Badge>
-                  <Button variant="outline" size="sm" className="gap-2"><Filter className="h-4 w-4" /> Filters</Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant={selectedZones.length > 0 ? "default" : "outline"} size="sm" className="gap-2">
+                        <Filter className="h-4 w-4" /> 
+                        {selectedZones.length > 0 ? `${selectedZones.length} Zones` : "Filters"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-56 p-4">
+                      <h4 className="font-bold mb-4 text-sm">Filter by Zone</h4>
+                      <div className="space-y-2">
+                        {["Western", "Eastern", "Central", "Northern"].map(zone => (
+                          <div 
+                            key={zone} 
+                            className="flex items-center justify-between p-2 hover:bg-muted rounded-md cursor-pointer text-sm"
+                            onClick={() => toggleZone(zone)}
+                          >
+                            <span>{zone}</span>
+                            {selectedZones.includes(zone) && <Check className="h-4 w-4 text-primary" />}
+                          </div>
+                        ))}
+                      </div>
+                      {selectedZones.length > 0 && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full mt-4 h-8 text-xs text-destructive"
+                          onClick={() => setSelectedZones([])}
+                        >
+                          Clear Filters
+                        </Button>
+                      )}
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
@@ -396,7 +450,7 @@ export default function AdminDashboard() {
                   { label: "Total Births (YTD)", value: (1248932 + allSubmissions.length).toLocaleString(), icon: TrendingUp, color: "text-primary", trend: "+12.4%" },
                   { label: "Active Facilities", value: "14,281", icon: Activity, color: "text-accent", trend: "98.2%" },
                   { label: "Certificates Issued", value: (892122 + allSubmissions.length).toLocaleString(), icon: Baby, color: "text-accent", trend: "71% verified" },
-                  { label: "New Submissions", value: allSubmissions.length.toString(), icon: ShieldCheck, color: "text-primary", trend: "Active" },
+                  { label: "Filtered Results", value: filteredSubmissions.length.toString(), icon: ShieldCheck, color: "text-primary", trend: "Real-time" },
                 ].map((stat, i) => (
                   <Card key={i} className="bg-card">
                     <CardHeader className="pb-2">
@@ -416,7 +470,11 @@ export default function AdminDashboard() {
               <Card className="overflow-x-auto">
                 <CardHeader>
                   <CardTitle className="font-headline">Recent OBRMS Submissions</CardTitle>
-                  <CardDescription>Drill-down view of the latest verified birth records.</CardDescription>
+                  <CardDescription>
+                    {globalSearchQuery || selectedZones.length > 0 
+                      ? `Showing ${filteredSubmissions.length} matches for your filters.`
+                      : "Drill-down view of the latest verified birth records."}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table>
@@ -425,32 +483,40 @@ export default function AdminDashboard() {
                         <TableHead>Child Name</TableHead>
                         <TableHead className="hidden md:table-cell">Facility</TableHead>
                         <TableHead>Record ID</TableHead>
-                        <TableHead className="hidden sm:table-cell">Status</TableHead>
+                        <TableHead className="hidden sm:table-cell">Zone</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {allSubmissions.slice(0, 10).map((sub, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="font-bold">{sub.childName}</TableCell>
-                          <TableCell className="hidden md:table-cell text-xs">{sub.facility}</TableCell>
-                          <TableCell className="font-mono text-[10px] text-muted-foreground">{sub.id}</TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="bg-primary/20 text-primary border-none text-[10px]">Verified</Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-8 gap-2 text-primary"
-                              onClick={() => openCertificate(sub)}
-                            >
-                              <Printer className="h-4 w-4" />
-                              <span className="hidden sm:inline">Print</span>
-                            </Button>
+                      {filteredSubmissions.length > 0 ? (
+                        filteredSubmissions.slice(0, 15).map((sub, i) => (
+                          <TableRow key={i} className="animate-in fade-in duration-300">
+                            <TableCell className="font-bold">{sub.childName}</TableCell>
+                            <TableCell className="hidden md:table-cell text-xs">{sub.facility}</TableCell>
+                            <TableCell className="font-mono text-[10px] text-muted-foreground">{sub.id}</TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <Badge className="bg-primary/20 text-primary border-none text-[10px] uppercase">{sub.zone || "Western"}</Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 gap-2 text-primary"
+                                onClick={() => openCertificate(sub)}
+                              >
+                                <Printer className="h-4 w-4" />
+                                <span className="hidden sm:inline">Print</span>
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} className="h-32 text-center text-muted-foreground italic">
+                            No records matching your search or filters.
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </CardContent>
@@ -471,15 +537,6 @@ export default function AdminDashboard() {
                   <h1 className="text-3xl font-headline font-bold">Issued Certificates</h1>
                   <p className="text-muted-foreground">Manage and reprint official OBRMS birth certificates.</p>
                 </div>
-                <div className="relative max-w-sm w-full">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Search by name or Record ID..." 
-                    className="pl-10 h-11"
-                    value={certSearchQuery}
-                    onChange={(e) => setCertSearchQuery(e.target.value)}
-                  />
-                </div>
               </div>
 
               <Card>
@@ -496,8 +553,8 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredCertificates.length > 0 ? (
-                        filteredCertificates.map((cert, i) => (
+                      {filteredSubmissions.length > 0 ? (
+                        filteredSubmissions.map((cert, i) => (
                           <TableRow key={i} className="group hover:bg-primary/5 transition-colors">
                             <TableCell className="font-mono text-xs font-bold text-primary">{cert.id}</TableCell>
                             <TableCell className="font-bold">{cert.childName}</TableCell>
@@ -519,7 +576,7 @@ export default function AdminDashboard() {
                       ) : (
                         <TableRow>
                           <TableCell colSpan={6} className="h-32 text-center text-muted-foreground italic">
-                            No records found matching "{certSearchQuery}"
+                            No records found.
                           </TableCell>
                         </TableRow>
                       )}
