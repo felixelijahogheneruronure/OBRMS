@@ -33,6 +33,14 @@ const monthlyTrend = [
   { month: 'Jun', count: 14800 },
 ];
 
+const recentSubmissions = [
+  { facility: "Lagos Island Maternity Hospital", location: "Lagos State", id: "LG-BR-2024-1001", time: "12 mins ago" },
+  { facility: "NIMASA SAR Base Clinic", location: "Lagos State", id: "LG-BR-2024-1002", time: "24 mins ago" },
+  { facility: "AB Health Consortium Ltd", location: "Rivers State", id: "RV-BR-2024-5512", time: "36 mins ago" },
+  { facility: "King's Care Hospital Limited", location: "Abuja (FCT)", id: "FC-BR-2024-2201", time: "48 mins ago" },
+  { facility: "BU Clinic/Hospital Ltd", location: "Delta State", id: "DT-BR-2024-8849", time: "55 mins ago" },
+];
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -245,15 +253,15 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {[1, 2, 3, 4, 5].map((i) => (
+                      {recentSubmissions.map((sub, i) => (
                         <TableRow key={i}>
-                          <TableCell className="font-medium">Lagos Island Maternity Hospital</TableCell>
-                          <TableCell>Lagos State</TableCell>
-                          <TableCell className="font-mono text-xs text-muted-foreground">LG-BR-2024-{1000 + i}</TableCell>
+                          <TableCell className="font-medium">{sub.facility}</TableCell>
+                          <TableCell>{sub.location}</TableCell>
+                          <TableCell className="font-mono text-xs text-muted-foreground">{sub.id}</TableCell>
                           <TableCell>
                             <Badge className="bg-primary/20 text-primary border-none">Verified</Badge>
                           </TableCell>
-                          <TableCell className="text-right text-muted-foreground text-xs">{i * 12} mins ago</TableCell>
+                          <TableCell className="text-right text-muted-foreground text-xs">{sub.time}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
