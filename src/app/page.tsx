@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -6,6 +5,7 @@ import { Baby, Activity, ShieldCheck, Map, Users, Download, ArrowRight, Clipboar
 import Link from "next/link";
 import { RollingCounter } from "@/components/dashboard/rolling-counter";
 import { LiveTicker } from "@/components/dashboard/live-ticker";
+import { PerSecondCounter } from "@/components/dashboard/per-second-counter";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -59,6 +59,9 @@ export default function Home() {
               <Activity className="h-3 w-3" />
               Live Population Monitor
             </div>
+            
+            <PerSecondCounter />
+
             <h1 className="text-5xl md:text-7xl font-headline font-bold leading-tight">
               Nigeria’s Pulse, <br />
               <span className="text-primary">Digitized.</span>
