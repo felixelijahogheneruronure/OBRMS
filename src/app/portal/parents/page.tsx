@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Search, Download, FileCheck, AlertCircle, Baby } from "lucide-react";
+import { Search, Download, FileCheck, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 export default function ParentPortal() {
   const [regId, setRegId] = useState("");
@@ -33,11 +34,16 @@ export default function ParentPortal() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="border-b border-border py-6 px-4">
+      <header className="border-b border-border py-4 px-4">
         <div className="container mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary h-6 w-6 rounded flex items-center justify-center">
-              <Baby className="text-background h-4 w-4" />
+            <div className="relative h-8 w-8">
+              <Image 
+                src="/logo.png" 
+                alt="OBRMS Logo" 
+                fill 
+                className="object-contain"
+              />
             </div>
             <span className="font-headline font-bold text-primary">OBRMS</span>
           </Link>

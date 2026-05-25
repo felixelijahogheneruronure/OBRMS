@@ -13,6 +13,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { RegistrationForm } from "@/components/dashboard/registration-form";
 import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
+import Image from "next/image";
+import Link from "next/link";
 
 const stateData = [
   { name: 'Lagos', births: 4200, growth: 2.1 },
@@ -48,12 +50,17 @@ export default function AdminDashboard() {
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-card hidden lg:flex flex-col p-6 gap-8">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center">
-            <Activity className="text-background h-5 w-5" />
+        <Link href="/" className="flex items-center gap-2">
+          <div className="relative h-8 w-8">
+            <Image 
+              src="/logo.png" 
+              alt="OBRMS Logo" 
+              fill 
+              className="object-contain"
+            />
           </div>
           <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
-        </div>
+        </Link>
         
         <nav className="flex flex-col gap-2">
           <Button 

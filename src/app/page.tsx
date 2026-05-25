@@ -17,12 +17,17 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center">
-              <Activity className="text-background h-5 w-5" />
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative h-8 w-8">
+              <Image 
+                src="/logo.png" 
+                alt="OBRMS Logo" 
+                fill 
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-headline font-bold tracking-tight text-primary">OBRMS</span>
-          </div>
+          </Link>
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/analytics" className="text-sm font-medium hover:text-primary transition-colors">National Analytics</Link>
             <Link href="/portal/parents" className="text-sm font-medium hover:text-primary transition-colors">Parent Portal</Link>
@@ -189,12 +194,17 @@ export default function Home() {
       <footer className="mt-auto border-t border-border bg-card py-12">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <div className="bg-primary h-6 w-6 rounded flex items-center justify-center">
-                <Activity className="text-background h-4 w-4" />
+            <Link href="/" className="flex items-center gap-2">
+              <div className="relative h-6 w-6">
+                <Image 
+                  src="/logo.png" 
+                  alt="OBRMS Logo" 
+                  fill 
+                  className="object-contain"
+                />
               </div>
               <span className="font-headline font-bold text-primary">OBRMS</span>
-            </div>
+            </Link>
             <p className="text-xs text-muted-foreground">© 2024 Federal Ministry of Health, Nigeria. Built for precision.</p>
           </div>
           <div className="flex gap-6">

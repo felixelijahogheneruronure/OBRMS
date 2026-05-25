@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Activity, ShieldCheck, Search, ChevronRight } from "lucide-react";
+import { ShieldCheck, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HOSPITALS } from "@/lib/hospitals";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,12 +33,21 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="bg-primary h-10 w-10 rounded-xl flex items-center justify-center">
-              <Activity className="text-background h-6 w-6" />
+        <div className="text-center space-y-4">
+          <Link href="/" className="inline-flex flex-col items-center gap-4 mb-4">
+            <div className="relative h-24 w-24">
+              <Image 
+                src="/npc.png" 
+                alt="National Population Commission" 
+                fill 
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className="text-2xl font-headline font-bold text-primary">OBRMS</span>
+            <div className="space-y-1">
+              <span className="text-2xl font-headline font-bold text-primary block">OBRMS</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Federal Republic of Nigeria</span>
+            </div>
           </Link>
           <h1 className="text-3xl font-headline font-bold">Administration Access</h1>
           <p className="text-muted-foreground">Authorized medical and administrative personnel only.</p>
