@@ -41,7 +41,7 @@ export default function Home() {
               <Link href="/login">Administration Login</Link>
             </Button>
             <Button asChild>
-              <Link href="/dashboard/admin">New Registration</Link>
+              <Link href="/login">New Registration</Link>
             </Button>
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <Button variant="link" className="p-0 text-primary group-hover:translate-x-1 transition-transform" asChild>
-                  <Link href="/dashboard/admin" className="flex items-center gap-2">
+                  <Link href="/login" className="flex items-center gap-2">
                     Open Dashboard <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
