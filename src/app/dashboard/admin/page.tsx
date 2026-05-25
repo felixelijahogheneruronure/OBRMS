@@ -44,7 +44,7 @@ export default function AdminDashboard() {
           <div className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center">
             <Activity className="text-background h-5 w-5" />
           </div>
-          <span className="text-xl font-headline font-bold text-primary tracking-tight">LUMEN NG</span>
+          <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
         </div>
         
         <nav className="flex flex-col gap-2">
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
             <div className="space-y-8 animate-in fade-in duration-500">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl font-headline font-bold">National Analytics Dashboard</h1>
+                  <h1 className="text-3xl font-headline font-bold">OBRMS National Dashboard</h1>
                   <p className="text-muted-foreground">Comprehensive real-time birthrate monitoring for Nigeria.</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -230,7 +230,7 @@ export default function AdminDashboard() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-headline">Recent Regional Submissions</CardTitle>
+                  <CardTitle className="font-headline">Recent OBRMS Submissions</CardTitle>
                   <CardDescription>Drill-down view of the latest verified birth records.</CardDescription>
                 </CardHeader>
                 <CardContent>

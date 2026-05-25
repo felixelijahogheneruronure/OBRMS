@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Lumen NG | Nigeria Birthrate Monitoring System',
+  title: 'OBRMS | Nigeria Birthrate Monitoring System',
   description: 'Real-time birth registration and population monitoring system for Nigeria medical facilities.',
 };
 

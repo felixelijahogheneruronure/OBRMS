@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -9,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Search, Download, FileCheck, AlertCircle, Baby } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 export default function ParentPortal() {
   const [regId, setRegId] = useState("");
@@ -39,7 +39,7 @@ export default function ParentPortal() {
             <div className="bg-primary h-6 w-6 rounded flex items-center justify-center">
               <Baby className="text-background h-4 w-4" />
             </div>
-            <span className="font-headline font-bold text-primary">LUMEN NG</span>
+            <span className="font-headline font-bold text-primary">OBRMS</span>
           </Link>
           <Button variant="ghost" asChild>
             <Link href="/">Back to Home</Link>
@@ -51,7 +51,7 @@ export default function ParentPortal() {
         <div className="max-w-2xl w-full space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-headline font-bold">Certificate Portal</h1>
-            <p className="text-muted-foreground">Retrieve your child&apos;s official birth certificate using the registration ID provided by your hospital.</p>
+            <p className="text-muted-foreground">Retrieve your child&apos;s official birth certificate using the OBRMS registration ID provided by your hospital.</p>
           </div>
 
           <Card className="border-border shadow-xl">
@@ -131,18 +131,15 @@ export default function ParentPortal() {
           {!result && !isSearching && (
             <div className="flex items-center gap-3 p-4 bg-secondary/20 rounded-lg text-sm text-muted-foreground">
               <AlertCircle className="h-5 w-5 text-primary" />
-              <p>Common IDs look like <span className="font-mono text-primary">ST-BR-2024-XXXX</span>. Check your hospital handout if you can&apos;t find it.</p>
+              <p>Common OBRMS IDs look like <span className="font-mono text-primary">ST-BR-2024-XXXX</span>. Check your hospital handout if you can&apos;t find it.</p>
             </div>
           )}
         </div>
       </main>
 
       <footer className="py-8 border-t border-border text-center text-xs text-muted-foreground">
-        &copy; 2024 Lumen NG Population Intelligence System
+        &copy; 2024 OBRMS Population Intelligence System
       </footer>
     </div>
   );
 }
-
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";

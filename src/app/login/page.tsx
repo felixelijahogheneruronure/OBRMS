@@ -37,7 +37,7 @@ export default function LoginPage() {
             <div className="bg-primary h-10 w-10 rounded-xl flex items-center justify-center">
               <Activity className="text-background h-6 w-6" />
             </div>
-            <span className="text-2xl font-headline font-bold text-primary">LUMEN NG</span>
+            <span className="text-2xl font-headline font-bold text-primary">OBRMS</span>
           </Link>
           <h1 className="text-3xl font-headline font-bold">Administration Access</h1>
           <p className="text-muted-foreground">Authorized medical and administrative personnel only.</p>
@@ -79,7 +79,7 @@ export default function LoginPage() {
                 <Input 
                   id="email" 
                   type="email" 
-                  placeholder="name@facility.gov.ng" 
+                  placeholder="admin@obrms.gov.ng" 
                   className="h-12"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

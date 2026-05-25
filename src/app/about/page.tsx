@@ -26,7 +26,7 @@ export default function ResourcesPage() {
         <div className="max-w-3xl space-y-4">
           <h2 className="text-4xl font-headline font-bold">Empowering Every Birth Registration</h2>
           <p className="text-muted-foreground text-lg">
-            LUMEN NG is Nigeria's official digital initiative to ensure that every child born within the Federation is recognized, protected, and accounted for from day one.
+            OBRMS (Online Birth Registration and Monitoring System) is Nigeria's official digital initiative to ensure that every child born within the Federation is recognized, protected, and accounted for from day one.
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export default function ResourcesPage() {
               <CardDescription>Privacy and Integrity</CardDescription>
             </CardHeader>
             <CardContent className="text-sm">
-              All registration data is encrypted and stored in high-security federal servers, compliant with national data protection regulations.
+              All registration data in OBRMS is encrypted and stored in high-security federal servers, compliant with national data protection regulations.
             </CardContent>
           </Card>
         </div>
@@ -77,13 +77,13 @@ export default function ResourcesPage() {
               <AccordionItem value="item-1">
                 <AccordionTrigger>Who can register a birth?</AccordionTrigger>
                 <AccordionContent>
-                  Either parent, the medical officer in charge of the facility, or a designated notifier can initiate the registration process through the Administration Login.
+                  Either parent, the medical officer in charge of the facility, or a designated notifier can initiate the registration process through the OBRMS Administration Login.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
                 <AccordionTrigger>What if the birth happened at home?</AccordionTrigger>
                 <AccordionContent>
-                  Home births should be reported to the nearest Primary Health Center (PHC). The local health official will verify the details and register the child in the LUMEN NG system.
+                  Home births should be reported to the nearest Primary Health Center (PHC). The local health official will verify the details and register the child in the OBRMS system.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
@@ -114,7 +114,7 @@ export default function ResourcesPage() {
                   </div>
                   <div>
                     <p className="font-bold">Email Support</p>
-                    <p className="text-sm text-muted-foreground">support@lumen.gov.ng</p>
+                    <p className="text-sm text-muted-foreground">support@obrms.gov.ng</p>
                     <p className="text-xs text-muted-foreground mt-1">Response time: Within 24 hours</p>
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export default function ResourcesPage() {
                   </div>
                   <div>
                     <p className="font-bold">National Helpdesk</p>
-                    <p className="text-sm text-muted-foreground">0800-LUMEN-NG (Toll Free)</p>
+                    <p className="text-sm text-muted-foreground">0800-OBRMS-NG (Toll Free)</p>
                     <p className="text-xs text-muted-foreground mt-1">Available 8 AM - 4 PM WAT</p>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default function ResourcesPage() {
       <footer className="mt-24 border-t border-border bg-card py-12">
         <div className="container mx-auto px-8 text-center">
           <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
-            Federal Ministry of Health & Population - LUMEN NG DATA STREAMING v2.4
+            Federal Ministry of Health & Population - OBRMS DATA STREAMING v2.4
           </p>
         </div>
       </footer>

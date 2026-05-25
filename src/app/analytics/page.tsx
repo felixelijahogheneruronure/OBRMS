@@ -28,7 +28,7 @@ export default function NationalAnalyticsPage() {
             <Link href="/"><ArrowLeft className="h-4 w-4" /> Home</Link>
           </Button>
           <div className="h-4 w-px bg-border" />
-          <h1 className="font-headline font-bold text-primary">National Intelligence Portal</h1>
+          <h1 className="font-headline font-bold text-primary">OBRMS National Intelligence</h1>
         </div>
         <div className="flex items-center gap-4">
           <ShieldCheck className="h-5 w-5 text-primary" />
@@ -41,7 +41,7 @@ export default function NationalAnalyticsPage() {
           <div className="space-y-2">
             <h2 className="text-4xl font-headline font-bold">Nigeria's Demographic Pulse</h2>
             <p className="text-muted-foreground max-w-2xl">
-              Real-time monitoring of population growth and birth activity across the Federation. Data sourced from 14,000+ verified medical facilities.
+              Real-time monitoring of population growth and birth activity across the Federation. Data sourced from 14,000+ verified medical facilities via OBRMS.
             </p>
           </div>
           <PerSecondCounter />
@@ -117,7 +117,7 @@ export default function NationalAnalyticsPage() {
       <footer className="mt-auto border-t border-border bg-card py-12">
         <div className="container mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
-            Federal Ministry of Health & Population - LUMEN NG DATA STREAMING v2.4
+            Federal Ministry of Health & Population - OBRMS DATA STREAMING v2.4
           </p>
           <div className="flex gap-6">
             <Link href="/" className="text-xs text-muted-foreground hover:text-primary transition-colors">Documentation</Link>

@@ -21,7 +21,7 @@ export default function Home() {
             <div className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center">
               <Activity className="text-background h-5 w-5" />
             </div>
-            <span className="text-xl font-headline font-bold tracking-tight text-primary">LUMEN NG</span>
+            <span className="text-xl font-headline font-bold tracking-tight text-primary">OBRMS</span>
           </div>
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/analytics" className="text-sm font-medium hover:text-primary transition-colors">National Analytics</Link>
@@ -33,7 +33,7 @@ export default function Home() {
               <Link href="/login">Administration Login</Link>
             </Button>
             <Button asChild>
-              <Link href="/registration/new">New Registration</Link>
+              <Link href="/dashboard/admin">New Registration</Link>
             </Button>
           </div>
         </div>
@@ -41,7 +41,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative pt-12 pb-24 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20">
+        <div className="absolute inset-0 z-0 opacity-10">
           {heroImage && (
             <Image 
               src={heroImage.imageUrl} 
@@ -67,7 +67,7 @@ export default function Home() {
               <span className="text-primary">Digitized.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Real-time monitoring of national birthrates across all 36 states. Ensuring every child is accounted for through secure, high-integrity data.
+              Real-time monitoring of national birthrates across all 36 states. Ensuring every child is accounted for through secure, high-integrity data via OBRMS.
             </p>
           </div>
 
@@ -193,7 +193,7 @@ export default function Home() {
               <div className="bg-primary h-6 w-6 rounded flex items-center justify-center">
                 <Activity className="text-background h-4 w-4" />
               </div>
-              <span className="font-headline font-bold text-primary">LUMEN NG</span>
+              <span className="font-headline font-bold text-primary">OBRMS</span>
             </div>
             <p className="text-xs text-muted-foreground">© 2024 Federal Ministry of Health, Nigeria. Built for precision.</p>
           </div>
