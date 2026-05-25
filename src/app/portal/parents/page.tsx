@@ -34,10 +34,10 @@ export default function ParentPortal() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="border-b border-border py-4 px-4">
+      <header className="border-b border-border py-4 px-4 bg-card/50 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="relative h-8 w-8">
+            <div className="relative h-10 w-10">
               <Image 
                 src="/logo.png" 
                 alt="OBRMS Logo" 
@@ -45,7 +45,10 @@ export default function ParentPortal() {
                 className="object-contain"
               />
             </div>
-            <span className="font-headline font-bold text-primary">OBRMS</span>
+            <div className="flex flex-col leading-none">
+              <span className="font-headline font-bold text-primary">OBRMS</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Parent Portal</span>
+            </div>
           </Link>
           <Button variant="ghost" asChild>
             <Link href="/">Back to Home</Link>
@@ -143,8 +146,18 @@ export default function ParentPortal() {
         </div>
       </main>
 
-      <footer className="py-8 border-t border-border text-center text-xs text-muted-foreground">
-        &copy; 2024 OBRMS Population Intelligence System
+      <footer className="py-12 border-t border-border bg-card flex flex-col items-center gap-4">
+         <div className="relative h-10 w-10 grayscale opacity-70">
+          <Image 
+            src="/ng.png" 
+            alt="Nigeria Seal" 
+            fill 
+            className="object-contain"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          &copy; 2024 OBRMS Population Intelligence System. Federal Republic of Nigeria.
+        </p>
       </footer>
     </div>
   );

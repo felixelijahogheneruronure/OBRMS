@@ -18,7 +18,7 @@ export default function Home() {
       <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="relative h-8 w-8">
+            <div className="relative h-10 w-10">
               <Image 
                 src="/logo.png" 
                 alt="OBRMS Logo" 
@@ -26,7 +26,10 @@ export default function Home() {
                 className="object-contain"
               />
             </div>
-            <span className="text-xl font-headline font-bold tracking-tight text-primary">OBRMS</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-xl font-headline font-bold tracking-tight text-primary">OBRMS</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Nigeria Birth Registry</span>
+            </div>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/analytics" className="text-sm font-medium hover:text-primary transition-colors">National Analytics</Link>
@@ -193,9 +196,9 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-auto border-t border-border bg-card py-12">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="relative h-6 w-6">
+              <div className="relative h-10 w-10">
                 <Image 
                   src="/logo.png" 
                   alt="OBRMS Logo" 
@@ -205,7 +208,17 @@ export default function Home() {
               </div>
               <span className="font-headline font-bold text-primary">OBRMS</span>
             </Link>
-            <p className="text-xs text-muted-foreground">© 2024 Federal Ministry of Health, Nigeria. Built for precision.</p>
+            <div className="flex items-center gap-3">
+              <div className="relative h-8 w-8 grayscale opacity-70">
+                <Image 
+                  src="/ng.png" 
+                  alt="Nigeria National Seal" 
+                  fill 
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">© 2024 Federal Ministry of Health, Nigeria. <br />Digital Identity & Vital Statistics Division.</p>
+            </div>
           </div>
           <div className="flex gap-6">
             <Link href="#" className="text-xs text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link>

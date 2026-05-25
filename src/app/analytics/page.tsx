@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Activity, Baby, Map, TrendingUp, Users, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip } from 'recharts';
 
 const stateDistribution = [
@@ -23,16 +24,26 @@ export default function NationalAnalyticsPage() {
     <div className="min-h-screen bg-background text-foreground">
       {/* Top Bar */}
       <header className="border-b border-border bg-card/50 px-8 h-16 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Button variant="ghost" size="sm" asChild className="gap-2">
             <Link href="/"><ArrowLeft className="h-4 w-4" /> Home</Link>
           </Button>
-          <div className="h-4 w-px bg-border" />
-          <h1 className="font-headline font-bold text-primary">OBRMS National Intelligence</h1>
+          <div className="h-8 w-px bg-border" />
+          <div className="flex items-center gap-2">
+            <div className="relative h-8 w-8">
+              <Image 
+                src="/logo.png" 
+                alt="OBRMS Logo" 
+                fill 
+                className="object-contain"
+              />
+            </div>
+            <h1 className="font-headline font-bold text-primary">OBRMS Intelligence</h1>
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <ShieldCheck className="h-5 w-5 text-primary" />
-          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Public Reporting Active</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Federal Live Stream</span>
         </div>
       </header>
 
@@ -116,9 +127,19 @@ export default function NationalAnalyticsPage() {
 
       <footer className="mt-auto border-t border-border bg-card py-12">
         <div className="container mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
-            Federal Ministry of Health & Population - OBRMS DATA STREAMING v2.4
-          </p>
+          <div className="flex items-center gap-4">
+             <div className="relative h-10 w-10">
+              <Image 
+                src="/ng.png" 
+                alt="Nigeria Seal" 
+                fill 
+                className="object-contain grayscale"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
+              Federal Ministry of Health & Population - OBRMS INTEL v2.4
+            </p>
+          </div>
           <div className="flex gap-6">
             <Link href="/" className="text-xs text-muted-foreground hover:text-primary transition-colors">Documentation</Link>
             <Link href="/login" className="text-xs text-muted-foreground hover:text-primary transition-colors">Admin Portal</Link>

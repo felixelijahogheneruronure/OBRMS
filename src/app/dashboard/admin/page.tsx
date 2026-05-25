@@ -50,8 +50,8 @@ export default function AdminDashboard() {
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-card hidden lg:flex flex-col p-6 gap-8">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="relative h-8 w-8">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="relative h-10 w-10">
             <Image 
               src="/logo.png" 
               alt="OBRMS Logo" 
@@ -59,7 +59,10 @@ export default function AdminDashboard() {
               className="object-contain"
             />
           </div>
-          <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
+          <div className="flex flex-col leading-none">
+            <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
+            <span className="text-[10px] font-bold text-muted-foreground uppercase">Admin Panel</span>
+          </div>
         </Link>
         
         <nav className="flex flex-col gap-2">
@@ -88,7 +91,17 @@ export default function AdminDashboard() {
           </Button>
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-border">
+        <div className="mt-auto pt-6 border-t border-border flex flex-col gap-6">
+          <div className="flex items-center justify-center grayscale opacity-50">
+             <div className="relative h-12 w-12">
+              <Image 
+                src="/ng.png" 
+                alt="Nigeria Seal" 
+                fill 
+                className="object-contain"
+              />
+            </div>
+          </div>
           <Card className="bg-secondary/50 border-none">
             <CardContent className="p-4 text-center">
               <p className="text-xs text-muted-foreground mb-3">Administrator Access</p>

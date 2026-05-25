@@ -33,24 +33,36 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-4">
-          <Link href="/" className="inline-flex flex-col items-center gap-4 mb-4">
-            <div className="relative h-24 w-24">
-              <Image 
-                src="/npc.png" 
-                alt="National Population Commission" 
-                fill 
-                className="object-contain"
-                priority
-              />
+        <div className="text-center space-y-6">
+          <Link href="/" className="inline-flex flex-col items-center gap-6 mb-4">
+            <div className="flex items-center gap-4">
+               <div className="relative h-16 w-16">
+                <Image 
+                  src="/ng.png" 
+                  alt="Federal Republic of Nigeria" 
+                  fill 
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div className="h-12 w-px bg-border" />
+              <div className="relative h-16 w-16">
+                <Image 
+                  src="/npc.png" 
+                  alt="National Population Commission" 
+                  fill 
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
             <div className="space-y-1">
-              <span className="text-2xl font-headline font-bold text-primary block">OBRMS</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Federal Republic of Nigeria</span>
+              <span className="text-2xl font-headline font-bold text-primary block tracking-tight">OBRMS Administration</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground">National Population Commission</span>
             </div>
           </Link>
-          <h1 className="text-3xl font-headline font-bold">Administration Access</h1>
-          <p className="text-muted-foreground">Authorized medical and administrative personnel only.</p>
+          <h1 className="text-3xl font-headline font-bold">Authorized Access</h1>
+          <p className="text-muted-foreground">Secure gateway for medical and administrative personnel.</p>
         </div>
 
         <Card className="border-border shadow-2xl bg-card">
@@ -120,7 +132,7 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground uppercase tracking-widest font-bold">
           <ShieldCheck className="h-4 w-4 text-primary" />
-          End-to-End Encrypted Session
+          Federal Security Protocol Active
         </div>
       </div>
     </div>
