@@ -7,12 +7,13 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   LineChart, Line, Cell
 } from 'recharts';
-import { Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, Baby, PlusCircle } from "lucide-react";
+import { Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, Baby, PlusCircle, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { RegistrationForm } from "@/components/dashboard/registration-form";
 import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -43,90 +44,125 @@ const recentSubmissions = [
   { facility: "BU Clinic/Hospital Ltd", location: "Delta State", id: "DT-BR-2024-8849", time: "55 mins ago" },
 ];
 
+interface NavProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  onItemClick?: () => void;
+}
+
+const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
+  <div className="flex flex-col h-full gap-8">
+    <Link href="/" className="flex items-center gap-3">
+      <div className="relative h-10 w-10">
+        <Image 
+          src="/logo.png" 
+          alt="OBRMS Logo" 
+          fill 
+          className="object-contain"
+        />
+      </div>
+      <div className="flex flex-col leading-none">
+        <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
+        <span className="text-[10px] font-bold text-muted-foreground uppercase">Admin Panel</span>
+      </div>
+    </Link>
+    
+    <nav className="flex flex-col gap-2">
+      <Button 
+        variant={activeTab === "overview" ? "secondary" : "ghost"} 
+        className={`justify-start gap-3 ${activeTab === "overview" ? "bg-primary/10 text-primary" : ""}`}
+        onClick={() => {
+          setActiveTab("overview");
+          onItemClick?.();
+        }}
+      >
+        <TrendingUp className="h-4 w-4" /> National Analytics
+      </Button>
+      <Button 
+        variant={activeTab === "registration" ? "secondary" : "ghost"} 
+        className={`justify-start gap-3 ${activeTab === "registration" ? "bg-primary/10 text-primary" : ""}`}
+        onClick={() => {
+          setActiveTab("registration");
+          onItemClick?.();
+        }}
+      >
+        <PlusCircle className="h-4 w-4" /> New Registration
+      </Button>
+      <Button variant="ghost" className="justify-start gap-3">
+        <Map className="h-4 w-4" /> State Breakdown
+      </Button>
+      <Button variant="ghost" className="justify-start gap-3">
+        <Users className="h-4 w-4" /> User Management
+      </Button>
+      <Button variant="ghost" className="justify-start gap-3">
+        <Bell className="h-4 w-4" /> System Alerts
+      </Button>
+    </nav>
+
+    <div className="mt-auto pt-6 border-t border-border flex flex-col gap-6">
+      <div className="flex items-center justify-center grayscale opacity-50">
+         <div className="relative h-12 w-12">
+          <Image 
+            src="/ng.png" 
+            alt="Nigeria Seal" 
+            fill 
+            className="object-contain"
+          />
+        </div>
+      </div>
+      <Card className="bg-secondary/50 border-none">
+        <CardContent className="p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-3">Administrator Access</p>
+          <div className="flex items-center gap-3 text-left">
+            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs">AD</div>
+            <div className="overflow-hidden">
+              <p className="text-sm font-bold truncate">Adekunle O.</p>
+              <p className="text-[10px] uppercase text-muted-foreground truncate">Master Admin</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+);
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-border bg-card hidden lg:flex flex-col p-6 gap-8">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="relative h-10 w-10">
-            <Image 
-              src="/logo.png" 
-              alt="OBRMS Logo" 
-              fill 
-              className="object-contain"
-            />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase">Admin Panel</span>
-          </div>
-        </Link>
-        
-        <nav className="flex flex-col gap-2">
-          <Button 
-            variant={activeTab === "overview" ? "secondary" : "ghost"} 
-            className={`justify-start gap-3 ${activeTab === "overview" ? "bg-primary/10 text-primary" : ""}`}
-            onClick={() => setActiveTab("overview")}
-          >
-            <TrendingUp className="h-4 w-4" /> National Analytics
-          </Button>
-          <Button 
-            variant={activeTab === "registration" ? "secondary" : "ghost"} 
-            className={`justify-start gap-3 ${activeTab === "registration" ? "bg-primary/10 text-primary" : ""}`}
-            onClick={() => setActiveTab("registration")}
-          >
-            <PlusCircle className="h-4 w-4" /> New Registration
-          </Button>
-          <Button variant="ghost" className="justify-start gap-3">
-            <Map className="h-4 w-4" /> State Breakdown
-          </Button>
-          <Button variant="ghost" className="justify-start gap-3">
-            <Users className="h-4 w-4" /> User Management
-          </Button>
-          <Button variant="ghost" className="justify-start gap-3">
-            <Bell className="h-4 w-4" /> System Alerts
-          </Button>
-        </nav>
-
-        <div className="mt-auto pt-6 border-t border-border flex flex-col gap-6">
-          <div className="flex items-center justify-center grayscale opacity-50">
-             <div className="relative h-12 w-12">
-              <Image 
-                src="/ng.png" 
-                alt="Nigeria Seal" 
-                fill 
-                className="object-contain"
-              />
-            </div>
-          </div>
-          <Card className="bg-secondary/50 border-none">
-            <CardContent className="p-4 text-center">
-              <p className="text-xs text-muted-foreground mb-3">Administrator Access</p>
-              <div className="flex items-center gap-3 text-left">
-                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs">AD</div>
-                <div className="overflow-hidden">
-                  <p className="text-sm font-bold truncate">Adekunle O.</p>
-                  <p className="text-[10px] uppercase text-muted-foreground truncate">Master Admin</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Desktop Sidebar */}
+      <aside className="w-64 border-r border-border bg-card hidden lg:flex flex-col p-6 overflow-y-auto">
+        <SidebarNav activeTab={activeTab} setActiveTab={setActiveTab} />
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-y-auto">
-        <header className="h-16 border-b border-border bg-card/50 px-8 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md">
+        <header className="h-16 border-b border-border bg-card/50 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md">
           <div className="flex items-center gap-4 max-w-md w-full">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search records, states, or IDs..." className="border-none bg-transparent h-10 px-0 focus-visible:ring-0" />
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="lg:hidden">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-6 w-64">
+                <SidebarNav 
+                  activeTab={activeTab} 
+                  setActiveTab={setActiveTab} 
+                  onItemClick={() => setIsMobileMenuOpen(false)} 
+                />
+              </SheetContent>
+            </Sheet>
+            <div className="hidden sm:flex items-center gap-4 w-full">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Search records, states, or IDs..." className="border-none bg-transparent h-10 px-0 focus-visible:ring-0" />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Download className="h-4 w-4" /> Export Summary
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
+              <Download className="h-4 w-4" /> Export
             </Button>
             <Button size="icon" variant="ghost" className="relative">
               <Bell className="h-4 w-4" />
@@ -135,16 +171,16 @@ export default function AdminDashboard() {
           </div>
         </header>
 
-        <div className="p-8">
+        <div className="p-4 lg:p-8">
           {activeTab === "overview" && (
             <div className="space-y-8 animate-in fade-in duration-500">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl font-headline font-bold">OBRMS National Dashboard</h1>
-                  <p className="text-muted-foreground">Comprehensive real-time birthrate monitoring for Nigeria.</p>
+                  <h1 className="text-2xl lg:text-3xl font-headline font-bold">OBRMS National Dashboard</h1>
+                  <p className="text-muted-foreground text-sm lg:text-base">Comprehensive real-time birthrate monitoring for Nigeria.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20">LIVE: Reporting active</Badge>
+                  <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20">LIVE</Badge>
                   <Button variant="outline" size="sm" className="gap-2"><Filter className="h-4 w-4" /> Filters</Button>
                 </div>
               </div>
@@ -155,52 +191,52 @@ export default function AdminDashboard() {
               </div>
 
               {/* Quick Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 <Card className="bg-card">
                   <CardHeader className="pb-2">
                     <CardDescription className="text-xs uppercase font-bold tracking-widest text-primary">Total Births (YTD)</CardDescription>
-                    <CardTitle className="text-4xl font-headline">1,248,932</CardTitle>
+                    <CardTitle className="text-3xl lg:text-4xl font-headline">1,248,932</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 text-primary">
                       <TrendingUp className="h-4 w-4" />
-                      <span className="text-sm font-bold">+12.4% vs last year</span>
+                      <span className="text-sm font-bold">+12.4%</span>
                     </div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card">
                   <CardHeader className="pb-2">
                     <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-600">Active Facilities</CardDescription>
-                    <CardTitle className="text-4xl font-headline">14,281</CardTitle>
+                    <CardTitle className="text-3xl lg:text-4xl font-headline">14,281</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 text-emerald-600">
                       <Activity className="h-4 w-4" />
-                      <span className="text-sm font-bold">98.2% connectivity</span>
+                      <span className="text-sm font-bold">98.2%</span>
                     </div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card">
                   <CardHeader className="pb-2">
                     <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-600">Certificates Issued</CardDescription>
-                    <CardTitle className="text-4xl font-headline">892,122</CardTitle>
+                    <CardTitle className="text-3xl lg:text-4xl font-headline">892,122</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 text-emerald-600">
                       <Baby className="h-4 w-4" />
-                      <span className="text-sm font-bold">71% total births verified</span>
+                      <span className="text-sm font-bold">71% verified</span>
                     </div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card border-primary/20">
                   <CardHeader className="pb-2">
                     <CardDescription className="text-xs uppercase font-bold tracking-widest text-primary">Today's Forecast</CardDescription>
-                    <CardTitle className="text-4xl font-headline">~1,150</CardTitle>
+                    <CardTitle className="text-3xl lg:text-4xl font-headline">~1,150</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 text-primary">
                       <TrendingUp className="h-4 w-4" />
-                      <span className="text-sm font-bold">Slightly above average</span>
+                      <span className="text-sm font-bold">Stable</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -211,9 +247,9 @@ export default function AdminDashboard() {
                 <Card className="lg:col-span-2">
                   <CardHeader>
                     <CardTitle className="font-headline">Birth Volume by State</CardTitle>
-                    <CardDescription>Top 7 states reporting births in the current quarter.</CardDescription>
+                    <CardDescription>Top states reporting births in the current quarter.</CardDescription>
                   </CardHeader>
-                  <CardContent className="h-[400px]">
+                  <CardContent className="h-[300px] lg:h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={stateData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
@@ -236,10 +272,10 @@ export default function AdminDashboard() {
                 {/* Side Chart */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-headline">Monthly Growth Trend</CardTitle>
-                    <CardDescription>National aggregate trends over the past 6 months.</CardDescription>
+                    <CardTitle className="font-headline">Monthly Trend</CardTitle>
+                    <CardDescription>Aggregate national trends.</CardDescription>
                   </CardHeader>
-                  <CardContent className="h-[400px]">
+                  <CardContent className="h-[300px] lg:h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={monthlyTrend}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
@@ -256,7 +292,7 @@ export default function AdminDashboard() {
                 </Card>
               </div>
 
-              <Card>
+              <Card className="overflow-x-auto">
                 <CardHeader>
                   <CardTitle className="font-headline">Recent OBRMS Submissions</CardTitle>
                   <CardDescription>Drill-down view of the latest verified birth records.</CardDescription>
@@ -266,9 +302,9 @@ export default function AdminDashboard() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Facility Name</TableHead>
-                        <TableHead>Location</TableHead>
+                        <TableHead className="hidden md:table-cell">Location</TableHead>
                         <TableHead>Record ID</TableHead>
-                        <TableHead>Status</TableHead>
+                        <TableHead className="hidden sm:table-cell">Status</TableHead>
                         <TableHead className="text-right">Time</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -276,9 +312,9 @@ export default function AdminDashboard() {
                       {recentSubmissions.map((sub, i) => (
                         <TableRow key={i}>
                           <TableCell className="font-medium">{sub.facility}</TableCell>
-                          <TableCell>{sub.location}</TableCell>
+                          <TableCell className="hidden md:table-cell">{sub.location}</TableCell>
                           <TableCell className="font-mono text-xs text-muted-foreground">{sub.id}</TableCell>
-                          <TableCell>
+                          <TableCell className="hidden sm:table-cell">
                             <Badge className="bg-primary/20 text-primary border-none">Verified</Badge>
                           </TableCell>
                           <TableCell className="text-right text-muted-foreground text-xs">{sub.time}</TableCell>
