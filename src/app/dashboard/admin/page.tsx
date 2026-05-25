@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import { HOSPITALS } from "@/lib/hospitals";
 import { cn } from "@/lib/utils";
+import { exportToCSV } from "@/lib/export-utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -310,6 +311,15 @@ export default function AdminDashboard() {
     window.print();
   };
 
+  const handleExport = () => {
+    const date = new Date().toISOString().split('T')[0];
+    exportToCSV(allSubmissions, `OBRMS_Records_${date}`);
+    toast({
+      title: "Export Successful",
+      description: `CSV file with ${allSubmissions.length} records has been generated.`,
+    });
+  };
+
   const openCertificate = (record: any) => {
     setSelectedRecord(record);
     setIsCertOpen(true);
@@ -360,7 +370,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
-            <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
+            <Button variant="outline" size="sm" className="gap-2 hidden sm:flex" onClick={handleExport}>
               <Download className="h-4 w-4" /> Export
             </Button>
             <Popover>
