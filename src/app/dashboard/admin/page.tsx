@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
@@ -14,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { RegistrationForm } from "@/components/dashboard/registration-form";
+import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
 
 const stateData = [
   { name: 'Lagos', births: 4200, growth: 2.1 },
@@ -54,7 +54,7 @@ export default function AdminDashboard() {
             className={`justify-start gap-3 ${activeTab === "overview" ? "bg-primary/10 text-primary" : ""}`}
             onClick={() => setActiveTab("overview")}
           >
-            <TrendingUp className="h-4 w-4" /> Dashboard Overview
+            <TrendingUp className="h-4 w-4" /> National Analytics
           </Button>
           <Button 
             variant={activeTab === "registration" ? "secondary" : "ghost"} 
@@ -122,6 +122,11 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
+              {/* Real-time Histogram Section */}
+              <div className="grid grid-cols-1 gap-8">
+                <RealTimeBirthHistogram />
+              </div>
+
               {/* Quick Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <Card className="bg-card">
@@ -185,8 +190,8 @@ export default function AdminDashboard() {
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={stateData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-                        <XAxis dataKey="name" axisLine={false} tickLine={false} stroke="#9ca3af" fontSize={12} />
-                        <YAxis axisLine={false} tickLine={false} stroke="#9ca3af" fontSize={12} />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
+                        <YAxis axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
                         <Tooltip 
                           contentStyle={{ backgroundColor: '#0F1A15', border: '1px solid #1f2937', color: '#fff' }}
                           itemStyle={{ color: '#2DDC8F' }}
@@ -211,8 +216,8 @@ export default function AdminDashboard() {
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={monthlyTrend}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-                        <XAxis dataKey="month" axisLine={false} tickLine={false} stroke="#9ca3af" fontSize={12} />
-                        <YAxis axisLine={false} tickLine={false} stroke="#9ca3af" fontSize={12} hide />
+                        <XAxis dataKey="month" axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
+                        <YAxis axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} hide />
                         <Tooltip 
                           contentStyle={{ backgroundColor: '#0F1A15', border: '1px solid #1f2937', color: '#fff' }}
                           itemStyle={{ color: '#2DDC8F' }}
