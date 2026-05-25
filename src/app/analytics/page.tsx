@@ -5,7 +5,7 @@ import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-h
 import { LiveTicker } from "@/components/dashboard/live-ticker";
 import { PerSecondCounter } from "@/components/dashboard/per-second-counter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Activity, Baby, Map, TrendingUp, Users, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Activity, Baby, Map, TrendingUp, Users, ShieldCheck, ArrowLeft, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -104,21 +104,22 @@ export default function NationalAnalyticsPage() {
         </div>
 
         {/* Dynamic Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {[
-            { label: "Reporting Efficiency", value: "94.2%", icon: Activity, trend: "+1.2%" },
-            { label: "Daily Avg. Births", value: "20,582", icon: Baby, trend: "+45" },
-            { label: "Growth Index", value: "2.58", icon: TrendingUp, trend: "Stable" },
-            { label: "Medical Zones", value: "36 + FCT", icon: Map, trend: "Active" },
+            { label: "Total Population", value: "236,421,084", icon: Globe, trend: "+2.4% YoY", color: "text-primary" },
+            { label: "Reporting Efficiency", value: "94.2%", icon: Activity, trend: "+1.2%", color: "text-accent" },
+            { label: "Daily Avg. Births", value: "20,582", icon: Baby, trend: "+45", color: "text-accent" },
+            { label: "Growth Index", value: "2.58", icon: TrendingUp, trend: "Stable", color: "text-primary" },
+            { label: "Medical Zones", value: "36 + FCT", icon: Map, trend: "Active", color: "text-primary" },
           ].map((stat, i) => (
             <Card key={i} className="bg-card">
               <CardHeader className="pb-2">
-                <stat.icon className="h-4 w-4 text-primary mb-2" />
-                <CardDescription className="text-xs uppercase font-bold tracking-widest">{stat.label}</CardDescription>
-                <CardTitle className="text-3xl font-headline">{stat.value}</CardTitle>
+                <stat.icon className={`h-4 w-4 ${stat.color} mb-2`} />
+                <CardDescription className="text-[10px] uppercase font-bold tracking-widest">{stat.label}</CardDescription>
+                <CardTitle className="text-2xl font-headline tracking-tighter">{stat.value}</CardTitle>
               </CardHeader>
               <CardContent>
-                <span className="text-xs font-bold text-primary">{stat.trend}</span>
+                <span className={`text-[10px] font-bold ${stat.color}`}>{stat.trend}</span>
               </CardContent>
             </Card>
           ))}

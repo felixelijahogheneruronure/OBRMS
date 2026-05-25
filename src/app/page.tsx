@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Baby, Activity, ShieldCheck, Map, Users, Download, ArrowRight, ClipboardCheck } from "lucide-react";
+import { Baby, Activity, ShieldCheck, Map, Users, Download, ArrowRight, ClipboardCheck, Globe } from "lucide-react";
 import Link from "next/link";
 import { RollingCounter } from "@/components/dashboard/rolling-counter";
 import { LiveTicker } from "@/components/dashboard/live-ticker";
@@ -94,20 +94,20 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4">
               <Card className="bg-card">
                 <CardHeader className="pb-2">
-                  <Baby className="h-6 w-6 text-accent mb-2" />
-                  <CardTitle className="text-3xl font-headline">124k</CardTitle>
+                  <Globe className="h-6 w-6 text-primary mb-2" />
+                  <CardTitle className="text-2xl font-headline">236.4M</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs font-medium text-muted-foreground uppercase">This Month</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Total Est. Population</p>
                 </CardContent>
               </Card>
               <Card className="bg-card">
                 <CardHeader className="pb-2">
-                  <Activity className="h-6 w-6 text-primary mb-2" />
-                  <CardTitle className="text-3xl font-headline">2.4%</CardTitle>
+                  <Baby className="h-6 w-6 text-accent mb-2" />
+                  <CardTitle className="text-2xl font-headline">124k</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs font-medium text-muted-foreground uppercase">Growth Rate</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Births This Month</p>
                 </CardContent>
               </Card>
               <Card className="bg-card col-span-2">
@@ -116,9 +116,15 @@ export default function Home() {
                   <CardTitle className="text-lg font-headline">Verified Facilities</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold">12,842</span>
-                    <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded">+42 today</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold">12,842</span>
+                      <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded">+42 today</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-accent/5 px-2 py-1 rounded border border-accent/10">
+                      <Activity className="h-3 w-3 text-accent" />
+                      <span className="text-[10px] font-bold text-accent">2.4% Growth</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
