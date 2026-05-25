@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
@@ -23,7 +23,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import { HOSPITALS } from "@/lib/hospitals";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image from "image";
 import Link from "next/link";
 
 const stateData = [
@@ -145,114 +145,124 @@ interface NavProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onItemClick?: () => void;
+  userName: string;
 }
 
-const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
-  <div className="flex flex-col h-full gap-8">
-    <Link href="/" className="flex items-center gap-3">
-      <div className="relative h-10 w-10">
-        <Image 
-          src="/logo.png" 
-          alt="OBRMS Logo" 
-          fill 
-          className="object-contain"
-        />
-      </div>
-      <div className="flex flex-col leading-none">
-        <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
-        <span className="text-[10px] font-bold text-muted-foreground uppercase">Admin Panel</span>
-      </div>
-    </Link>
-    
-    <nav className="flex flex-col gap-2">
-      <Button 
-        variant={activeTab === "overview" ? "secondary" : "ghost"} 
-        className={cn("justify-start gap-3", activeTab === "overview" && "bg-primary/10 text-primary")}
-        onClick={() => {
-          setActiveTab("overview");
-          onItemClick?.();
-        }}
-      >
-        <TrendingUp className="h-4 w-4" /> National Analytics
-      </Button>
-      <Button 
-        variant={activeTab === "registration" ? "secondary" : "ghost"} 
-        className={cn("justify-start gap-3", activeTab === "registration" && "bg-primary/10 text-primary")}
-        onClick={() => {
-          setActiveTab("registration");
-          onItemClick?.();
-        }}
-      >
-        <PlusCircle className="h-4 w-4" /> New Registration
-      </Button>
-      <Button 
-        variant={activeTab === "certificates" ? "secondary" : "ghost"} 
-        className={cn("justify-start gap-3", activeTab === "certificates" && "bg-primary/10 text-primary")}
-        onClick={() => {
-          setActiveTab("certificates");
-          onItemClick?.();
-        }}
-      >
-        <FileText className="h-4 w-4" /> Issued Certificates
-      </Button>
-      <Button 
-        variant={activeTab === "states" ? "secondary" : "ghost"} 
-        className={cn("justify-start gap-3", activeTab === "states" && "bg-primary/10 text-primary")}
-        onClick={() => {
-          setActiveTab("states");
-          onItemClick?.();
-        }}
-      >
-        <Map className="h-4 w-4" /> State Breakdown
-      </Button>
-      <Button 
-        variant={activeTab === "users" ? "secondary" : "ghost"} 
-        className={cn("justify-start gap-3", activeTab === "users" && "bg-primary/10 text-primary")}
-        onClick={() => {
-          setActiveTab("users");
-          onItemClick?.();
-        }}
-      >
-        <Users className="h-4 w-4" /> User Management
-      </Button>
-      <Button 
-        variant={activeTab === "alerts" ? "secondary" : "ghost"} 
-        className={cn("justify-start gap-3", activeTab === "alerts" && "bg-primary/10 text-primary")}
-        onClick={() => {
-          setActiveTab("alerts");
-          onItemClick?.();
-        }}
-      >
-        <Bell className="h-4 w-4" /> System Alerts
-      </Button>
-    </nav>
+const SidebarNav = ({ activeTab, setActiveTab, onItemClick, userName }: NavProps) => {
+  const initials = userName
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
 
-    <div className="mt-auto pt-6 border-t border-border flex flex-col gap-6">
-      <div className="flex items-center justify-center grayscale opacity-50">
-         <div className="relative h-12 w-12">
+  return (
+    <div className="flex flex-col h-full gap-8">
+      <Link href="/" className="flex items-center gap-3">
+        <div className="relative h-10 w-10">
           <Image 
-            src="/ng.png" 
-            alt="Nigeria Seal" 
+            src="/logo.png" 
+            alt="OBRMS Logo" 
             fill 
             className="object-contain"
           />
         </div>
-      </div>
-      <Card className="bg-secondary/50 border-none">
-        <CardContent className="p-4 text-center">
-          <p className="text-xs text-muted-foreground mb-3">Administrator Access</p>
-          <div className="flex items-center gap-3 text-left">
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs">AD</div>
-            <div className="overflow-hidden">
-              <p className="text-sm font-bold truncate">Adekunle O.</p>
-              <p className="text-[10px] uppercase text-muted-foreground truncate">Master Admin</p>
-            </div>
+        <div className="flex flex-col leading-none">
+          <span className="text-xl font-headline font-bold text-primary tracking-tight">OBRMS</span>
+          <span className="text-[10px] font-bold text-muted-foreground uppercase">Admin Panel</span>
+        </div>
+      </Link>
+      
+      <nav className="flex flex-col gap-2">
+        <Button 
+          variant={activeTab === "overview" ? "secondary" : "ghost"} 
+          className={cn("justify-start gap-3", activeTab === "overview" && "bg-primary/10 text-primary")}
+          onClick={() => {
+            setActiveTab("overview");
+            onItemClick?.();
+          }}
+        >
+          <TrendingUp className="h-4 w-4" /> National Analytics
+        </Button>
+        <Button 
+          variant={activeTab === "registration" ? "secondary" : "ghost"} 
+          className={cn("justify-start gap-3", activeTab === "registration" && "bg-primary/10 text-primary")}
+          onClick={() => {
+            setActiveTab("registration");
+            onItemClick?.();
+          }}
+        >
+          <PlusCircle className="h-4 w-4" /> New Registration
+        </Button>
+        <Button 
+          variant={activeTab === "certificates" ? "secondary" : "ghost"} 
+          className={cn("justify-start gap-3", activeTab === "certificates" && "bg-primary/10 text-primary")}
+          onClick={() => {
+            setActiveTab("certificates");
+            onItemClick?.();
+          }}
+        >
+          <FileText className="h-4 w-4" /> Issued Certificates
+        </Button>
+        <Button 
+          variant={activeTab === "states" ? "secondary" : "ghost"} 
+          className={cn("justify-start gap-3", activeTab === "states" && "bg-primary/10 text-primary")}
+          onClick={() => {
+            setActiveTab("states");
+            onItemClick?.();
+          }}
+        >
+          <Map className="h-4 w-4" /> State Breakdown
+        </Button>
+        <Button 
+          variant={activeTab === "users" ? "secondary" : "ghost"} 
+          className={cn("justify-start gap-3", activeTab === "users" && "bg-primary/10 text-primary")}
+          onClick={() => {
+            setActiveTab("users");
+            onItemClick?.();
+          }}
+        >
+          <Users className="h-4 w-4" /> User Management
+        </Button>
+        <Button 
+          variant={activeTab === "alerts" ? "secondary" : "ghost"} 
+          className={cn("justify-start gap-3", activeTab === "alerts" && "bg-primary/10 text-primary")}
+          onClick={() => {
+            setActiveTab("alerts");
+            onItemClick?.();
+          }}
+        >
+          <Bell className="h-4 w-4" /> System Alerts
+        </Button>
+      </nav>
+
+      <div className="mt-auto pt-6 border-t border-border flex flex-col gap-6">
+        <div className="flex items-center justify-center grayscale opacity-50">
+           <div className="relative h-12 w-12">
+            <Image 
+              src="/ng.png" 
+              alt="Nigeria Seal" 
+              fill 
+              className="object-contain"
+            />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <Card className="bg-secondary/50 border-none">
+          <CardContent className="p-4 text-center">
+            <p className="text-xs text-muted-foreground mb-3">Administrator Access</p>
+            <div className="flex items-center gap-3 text-left">
+              <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs shrink-0">{initials || 'AD'}</div>
+              <div className="overflow-hidden">
+                <p className="text-sm font-bold truncate">{userName}</p>
+                <p className="text-[10px] uppercase text-muted-foreground truncate">Admin Officer</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -261,10 +271,15 @@ export default function AdminDashboard() {
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [isCertOpen, setIsCertOpen] = useState(false);
   const [certSearchQuery, setCertSearchQuery] = useState("");
+  const [userName, setUserName] = useState("Administrator");
   const { toast } = useToast();
 
   useEffect(() => {
     setIsMounted(true);
+    const storedName = localStorage.getItem('obrms_user_name');
+    if (storedName) {
+      setUserName(storedName);
+    }
   }, []);
 
   useEffect(() => {
@@ -308,7 +323,7 @@ export default function AdminDashboard() {
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="w-64 border-r border-border bg-card hidden lg:flex flex-col p-6 overflow-y-auto print:hidden">
-        <SidebarNav activeTab={activeTab} setActiveTab={setActiveTab} />
+        <SidebarNav activeTab={activeTab} setActiveTab={setActiveTab} userName={userName} />
       </aside>
 
       {/* Main Content */}
@@ -325,6 +340,7 @@ export default function AdminDashboard() {
                 <SidebarNav 
                   activeTab={activeTab} 
                   setActiveTab={setActiveTab} 
+                  userName={userName}
                   onItemClick={() => setIsMobileMenuOpen(false)} 
                 />
               </SheetContent>

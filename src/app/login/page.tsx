@@ -19,9 +19,26 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  const extractNameFromEmail = (email: string) => {
+    const namePart = email.split('@')[0];
+    const cleanedName = namePart.replace(/[0-9]/g, '');
+    const parts = cleanedName.split(/[\._-]/).filter(Boolean);
+    if (parts.length === 0) return "Administrator";
+    return parts
+      .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Extract name and store for the session
+    const userName = extractNameFromEmail(email);
+    localStorage.setItem('obrms_user_name', userName);
+    localStorage.setItem('obrms_user_email', email);
+    localStorage.setItem('obrms_facility', facility);
+
     // Simulate auth
     setTimeout(() => {
       router.push("/dashboard/admin");
