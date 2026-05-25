@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -12,11 +11,11 @@ import Link from "next/link";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip } from 'recharts';
 
 const stateDistribution = [
-  { name: 'Lagos', value: 35, color: '#2DDC8F' },
-  { name: 'Kano', value: 25, color: '#2DDC8F80' },
-  { name: 'Rivers', value: 15, color: '#2DDC8F60' },
-  { name: 'Oyo', value: 12, color: '#2DDC8F40' },
-  { name: 'Others', value: 13, color: '#2DDC8F20' },
+  { name: 'Lagos', value: 35, color: '#10b981' },
+  { name: 'Kano', value: 25, color: '#10b98180' },
+  { name: 'Rivers', value: 15, color: '#10b98160' },
+  { name: 'Oyo', value: 12, color: '#10b98140' },
+  { name: 'Others', value: 13, color: '#10b98120' },
 ];
 
 export default function NationalAnalyticsPage() {
@@ -77,7 +76,7 @@ export default function NationalAnalyticsPage() {
                     ))}
                   </Pie>
                   <RechartsTooltip 
-                    contentStyle={{ backgroundColor: '#0F1A15', border: '1px solid #1f2937', borderRadius: '8px' }}
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>

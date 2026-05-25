@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Activity } from "lucide-react";
@@ -56,7 +55,7 @@ export function RealTimeBirthHistogram() {
         <div className="h-[300px] w-full mt-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
               <XAxis 
                 dataKey="time" 
                 axisLine={false} 
@@ -72,19 +71,19 @@ export function RealTimeBirthHistogram() {
                 fontSize={10} 
               />
               <Tooltip 
-                cursor={{ fill: 'rgba(45, 220, 143, 0.1)' }}
+                cursor={{ fill: 'hsl(var(--primary) / 0.05)' }}
                 contentStyle={{ 
-                  backgroundColor: '#0F1A15', 
-                  border: '1px solid #1f2937', 
+                  backgroundColor: 'hsl(var(--card))', 
+                  border: '1px solid hsl(var(--border))', 
                   borderRadius: '8px' 
                 }}
-                itemStyle={{ color: '#2DDC8F' }}
+                itemStyle={{ color: 'hsl(var(--primary))' }}
               />
               <Bar dataKey="births" radius={[2, 2, 0, 0]}>
                 {data.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}`} 
-                    fill={index === data.length - 1 ? '#2DDC8F' : '#2DDC8F40'} 
+                    fill={index === data.length - 1 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.3)'} 
                   />
                 ))}
               </Bar>

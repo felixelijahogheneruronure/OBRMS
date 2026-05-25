@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -143,11 +142,11 @@ export default function AdminDashboard() {
                 </Card>
                 <Card className="bg-card">
                   <CardHeader className="pb-2">
-                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-accent">Active Facilities</CardDescription>
+                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-600">Active Facilities</CardDescription>
                     <CardTitle className="text-4xl font-headline">14,281</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center gap-2 text-accent">
+                    <div className="flex items-center gap-2 text-emerald-600">
                       <Activity className="h-4 w-4" />
                       <span className="text-sm font-bold">98.2% connectivity</span>
                     </div>
@@ -155,11 +154,11 @@ export default function AdminDashboard() {
                 </Card>
                 <Card className="bg-card">
                   <CardHeader className="pb-2">
-                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-400">Certificates Issued</CardDescription>
+                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-600">Certificates Issued</CardDescription>
                     <CardTitle className="text-4xl font-headline">892,122</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center gap-2 text-emerald-400">
+                    <div className="flex items-center gap-2 text-emerald-600">
                       <Baby className="h-4 w-4" />
                       <span className="text-sm font-bold">71% total births verified</span>
                     </div>
@@ -189,16 +188,16 @@ export default function AdminDashboard() {
                   <CardContent className="h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={stateData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                         <XAxis dataKey="name" axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
                         <YAxis axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
                         <Tooltip 
-                          contentStyle={{ backgroundColor: '#0F1A15', border: '1px solid #1f2937', color: '#fff' }}
-                          itemStyle={{ color: '#2DDC8F' }}
+                          contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb' }}
+                          itemStyle={{ color: 'hsl(var(--primary))' }}
                         />
                         <Bar dataKey="births" radius={[4, 4, 0, 0]}>
                           {stateData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={index === 0 ? '#2DDC8F' : '#2DDC8F40'} />
+                            <Cell key={`cell-${index}`} fill={index === 0 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.2)'} />
                           ))}
                         </Bar>
                       </BarChart>
@@ -215,14 +214,14 @@ export default function AdminDashboard() {
                   <CardContent className="h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={monthlyTrend}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                         <XAxis dataKey="month" axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
                         <YAxis axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} hide />
                         <Tooltip 
-                          contentStyle={{ backgroundColor: '#0F1A15', border: '1px solid #1f2937', color: '#fff' }}
-                          itemStyle={{ color: '#2DDC8F' }}
+                          contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb' }}
+                          itemStyle={{ color: 'hsl(var(--primary))' }}
                         />
-                        <Line type="monotone" dataKey="count" stroke="#2DDC8F" strokeWidth={3} dot={{ r: 4, fill: '#2DDC8F' }} />
+                        <Line type="monotone" dataKey="count" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 4, fill: 'hsl(var(--primary))' }} />
                       </LineChart>
                     </ResponsiveContainer>
                   </CardContent>
