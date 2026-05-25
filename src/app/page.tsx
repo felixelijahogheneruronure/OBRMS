@@ -28,7 +28,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-xl font-headline font-bold tracking-tight text-primary">OBRMS</span>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Nigeria Birth Registry</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Online Birthrate Monitoring System</span>
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
@@ -217,7 +217,7 @@ export default function Home() {
                   className="object-contain"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">© 2026 Federal Ministry of Health, Nigeria. <br />Digital Identity & Vital Statistics Division.</p>
+              <p className="text-xs text-muted-foreground">© 2026 Federal Ministry of Health, Nigeria. <br />Online Birthrate Monitoring System.</p>
             </div>
           </div>
           <div className="flex gap-6">
