@@ -24,13 +24,43 @@ import Image from "next/image";
 import Link from "next/link";
 
 const stateData = [
-  { name: 'Lagos', births: 4200, growth: 2.1 },
-  { name: 'Kano', births: 3800, growth: 1.8 },
-  { name: 'Oyo', births: 2400, growth: 0.5 },
-  { name: 'Rivers', births: 2100, growth: 3.1 },
-  { name: 'FCT', births: 1800, growth: 4.2 },
-  { name: 'Kaduna', births: 1600, growth: -0.2 },
-  { name: 'Anambra', births: 1400, growth: 1.1 },
+  { name: 'Lagos', births: 14200, growth: 2.1 },
+  { name: 'Kano', births: 13800, growth: 1.8 },
+  { name: 'Oyo', births: 8400, growth: 0.5 },
+  { name: 'Rivers', births: 9100, growth: 3.1 },
+  { name: 'FCT', births: 7800, growth: 4.2 },
+  { name: 'Kaduna', births: 7600, growth: -0.2 },
+  { name: 'Anambra', births: 6400, growth: 1.1 },
+  { name: 'Abia', births: 4200, growth: 0.8 },
+  { name: 'Adamawa', births: 3800, growth: 1.2 },
+  { name: 'Akwa Ibom', births: 5900, growth: 1.5 },
+  { name: 'Bauchi', births: 4100, growth: 0.9 },
+  { name: 'Bayelsa', births: 2800, growth: 2.4 },
+  { name: 'Benue', births: 4300, growth: 0.6 },
+  { name: 'Borno', births: 3200, growth: -1.1 },
+  { name: 'Cross River', births: 4500, growth: 1.0 },
+  { name: 'Delta', births: 6200, growth: 1.7 },
+  { name: 'Ebonyi', births: 3100, growth: 0.5 },
+  { name: 'Edo', births: 5400, growth: 1.2 },
+  { name: 'Ekiti', births: 2900, growth: 0.4 },
+  { name: 'Enugu', births: 4800, growth: 1.1 },
+  { name: 'Gombe', births: 3000, growth: 0.7 },
+  { name: 'Imo', births: 5100, growth: 0.9 },
+  { name: 'Jigawa', births: 3900, growth: 1.3 },
+  { name: 'Katsina', births: 4400, growth: 1.0 },
+  { name: 'Kebbi', births: 3600, growth: 0.8 },
+  { name: 'Kogi', births: 3700, growth: 0.6 },
+  { name: 'Kwara', births: 3800, growth: 0.5 },
+  { name: 'Nasarawa', births: 3200, growth: 2.1 },
+  { name: 'Niger', births: 4100, growth: 0.9 },
+  { name: 'Ogun', births: 6800, growth: 1.9 },
+  { name: 'Ondo', births: 4600, growth: 0.8 },
+  { name: 'Osun', births: 4400, growth: 0.7 },
+  { name: 'Plateau', births: 4200, growth: 1.1 },
+  { name: 'Sokoto', births: 3800, growth: 0.9 },
+  { name: 'Taraba', births: 2900, growth: 0.5 },
+  { name: 'Yobe', births: 2700, growth: 0.4 },
+  { name: 'Zamfara', births: 3100, growth: 0.6 },
 ];
 
 const monthlyTrend = [
@@ -185,6 +215,10 @@ export default function AdminDashboard() {
     return () => clearInterval(intervalId);
   }, [toast]);
 
+  // Sort stateData by births descending for charts, but alphabetically for breakdown
+  const chartData = [...stateData].sort((a, b) => b.births - a.births).slice(0, 10);
+  const sortedStates = [...stateData].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
@@ -269,12 +303,12 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <Card className="lg:col-span-2">
                   <CardHeader>
-                    <CardTitle className="font-headline">Birth Volume by State</CardTitle>
-                    <CardDescription>Top states reporting births in the current quarter.</CardDescription>
+                    <CardTitle className="font-headline">Top Performing States</CardTitle>
+                    <CardDescription>Top 10 states reporting births in the current period.</CardDescription>
                   </CardHeader>
                   <CardContent className="h-[300px] lg:h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={stateData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                         <XAxis dataKey="name" axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
                         <YAxis axisLine={false} tickLine={false} stroke="#6b7280" fontSize={12} />
@@ -283,7 +317,7 @@ export default function AdminDashboard() {
                           itemStyle={{ color: 'hsl(var(--primary))' }}
                         />
                         <Bar dataKey="births" radius={[4, 4, 0, 0]}>
-                          {stateData.map((entry, index) => (
+                          {chartData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={index === 0 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.2)'} />
                           ))}
                         </Bar>
@@ -360,30 +394,37 @@ export default function AdminDashboard() {
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                   <h1 className="text-3xl font-headline font-bold">State Distribution</h1>
-                  <p className="text-muted-foreground">Detailed demographic performance by Federation units.</p>
+                  <p className="text-muted-foreground">Comprehensive demographic performance for all 36 states and the FCT.</p>
                 </div>
-                <Button variant="outline" size="sm" className="gap-2"><Download className="h-4 w-4" /> Download Report</Button>
+                <div className="flex gap-2">
+                   <Button variant="outline" size="sm" className="gap-2"><Filter className="h-4 w-4" /> Zone Filter</Button>
+                   <Button variant="outline" size="sm" className="gap-2"><Download className="h-4 w-4" /> Export All</Button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {stateData.map((state, i) => (
-                  <Card key={i}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {sortedStates.map((state, i) => (
+                  <Card key={i} className="hover:border-primary/50 transition-colors">
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-center">
-                        <CardTitle className="font-headline">{state.name}</CardTitle>
-                        <Badge variant="secondary">{state.growth > 0 ? `+${state.growth}%` : `${state.growth}%`}</Badge>
+                        <CardTitle className="font-headline text-lg">{state.name}</CardTitle>
+                        <Badge variant="secondary" className={cn(
+                          state.growth > 0 ? "bg-accent/10 text-accent" : "bg-destructive/10 text-destructive"
+                        )}>
+                          {state.growth > 0 ? `+${state.growth}%` : `${state.growth}%`}
+                        </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
                         <div className="flex justify-between items-end">
-                          <span className="text-4xl font-headline font-bold">{state.births.toLocaleString()}</span>
-                          <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Registrations</span>
+                          <span className="text-3xl font-headline font-bold">{state.births.toLocaleString()}</span>
+                          <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Total Reg.</span>
                         </div>
-                        <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-primary" 
-                            style={{ width: `${(state.births / 5000) * 100}%` }}
+                            style={{ width: `${Math.min((state.births / 15000) * 100, 100)}%` }}
                           />
                         </div>
                       </div>
