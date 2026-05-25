@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 interface RollingCounterProps {
   value: number;
   className?: string;
+  minDigits?: number;
 }
 
 const RollingDigit = ({ digit }: { digit: string }) => {
@@ -27,8 +28,12 @@ const RollingDigit = ({ digit }: { digit: string }) => {
   );
 };
 
-export const RollingCounter = ({ value, className }: RollingCounterProps) => {
-  const formattedValue = value.toLocaleString('en-US', { minimumIntegerDigits: 6 }).replace(/,/g, '');
+export const RollingCounter = ({ value, className, minDigits = 6 }: RollingCounterProps) => {
+  // Use minimumIntegerDigits to ensure padding if specified
+  const formattedValue = value.toLocaleString('en-US', { 
+    useGrouping: false, 
+    minimumIntegerDigits: minDigits 
+  });
   const digits = formattedValue.split('');
 
   return (
@@ -37,7 +42,7 @@ export const RollingCounter = ({ value, className }: RollingCounterProps) => {
         <React.Fragment key={i}>
           <RollingDigit digit={digit} />
           { (digits.length - i - 1) % 3 === 0 && i !== digits.length - 1 && (
-            <span className="mx-1">,</span>
+            <span className="mx-0.5">,</span>
           )}
         </React.Fragment>
       ))}
