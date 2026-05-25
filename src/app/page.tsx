@@ -217,7 +217,7 @@ export default function Home() {
                   className="object-contain"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">© 2024 Federal Ministry of Health, Nigeria. <br />Digital Identity & Vital Statistics Division.</p>
+              <p className="text-xs text-muted-foreground">© 2026 Federal Ministry of Health, Nigeria. <br />Digital Identity & Vital Statistics Division.</p>
             </div>
           </div>
           <div className="flex gap-6">

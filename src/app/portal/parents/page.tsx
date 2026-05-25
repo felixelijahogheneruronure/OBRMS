@@ -156,7 +156,7 @@ export default function ParentPortal() {
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          &copy; 2024 OBRMS Population Intelligence System. Federal Republic of Nigeria.
+          &copy; 2026 OBRMS Population Intelligence System. Federal Republic of Nigeria.
         </p>
       </footer>
     </div>
