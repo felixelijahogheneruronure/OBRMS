@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  LineChart, Line, Cell, PieChart, Pie
+  LineChart, Line, Cell
 } from 'recharts';
 import { 
   Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, 
-  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2, CheckCircle
+  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,6 +19,7 @@ import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-h
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { HOSPITALS } from "@/lib/hospitals";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -180,7 +181,6 @@ export default function AdminDashboard() {
       });
     };
 
-    // Initial random delay then every 15-25 seconds
     const intervalId = setInterval(triggerRandomNotification, 15000 + Math.random() * 10000);
     return () => clearInterval(intervalId);
   }, [toast]);
