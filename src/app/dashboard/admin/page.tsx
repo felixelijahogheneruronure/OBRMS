@@ -1,19 +1,24 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  LineChart, Line, Cell
+  LineChart, Line, Cell, PieChart, Pie
 } from 'recharts';
-import { Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, Baby, PlusCircle, Menu } from "lucide-react";
+import { 
+  Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, 
+  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2, CheckCircle
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { RegistrationForm } from "@/components/dashboard/registration-form";
 import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useToast } from "@/hooks/use-toast";
+import { HOSPITALS } from "@/lib/hospitals";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -42,6 +47,18 @@ const recentSubmissions = [
   { facility: "AB Health Consortium Ltd", location: "Rivers State", id: "RV-BR-2024-5512", time: "36 mins ago" },
   { facility: "King's Care Hospital Limited", location: "Abuja (FCT)", id: "FC-BR-2024-2201", time: "48 mins ago" },
   { facility: "BU Clinic/Hospital Ltd", location: "Delta State", id: "DT-BR-2024-8849", time: "55 mins ago" },
+];
+
+const mockUsers = [
+  { name: "Adekunle Olawale", role: "Master Admin", email: "a.olawale@obrms.gov.ng", status: "Active" },
+  { name: "Chioma Okoro", role: "Zonal Supervisor", email: "c.okoro@obrms.gov.ng", status: "Active" },
+  { name: "Musa Ibrahim", role: "Verification Officer", email: "m.ibrahim@obrms.gov.ng", status: "Away" },
+];
+
+const mockAlerts = [
+  { type: "Security", message: "Failed login attempt detected from IP 192.168.1.45", time: "2 hours ago", severity: "high" },
+  { type: "System", message: "Database maintenance scheduled for Sunday 2AM WAT", time: "5 hours ago", severity: "medium" },
+  { type: "Data", message: "Discrepancy in reporting volume for Kano North Zone", time: "1 day ago", severity: "low" },
 ];
 
 interface NavProps {
@@ -88,13 +105,34 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
       >
         <PlusCircle className="h-4 w-4" /> New Registration
       </Button>
-      <Button variant="ghost" className="justify-start gap-3">
+      <Button 
+        variant={activeTab === "states" ? "secondary" : "ghost"} 
+        className={`justify-start gap-3 ${activeTab === "states" ? "bg-primary/10 text-primary" : ""}`}
+        onClick={() => {
+          setActiveTab("states");
+          onItemClick?.();
+        }}
+      >
         <Map className="h-4 w-4" /> State Breakdown
       </Button>
-      <Button variant="ghost" className="justify-start gap-3">
+      <Button 
+        variant={activeTab === "users" ? "secondary" : "ghost"} 
+        className={`justify-start gap-3 ${activeTab === "users" ? "bg-primary/10 text-primary" : ""}`}
+        onClick={() => {
+          setActiveTab("users");
+          onItemClick?.();
+        }}
+      >
         <Users className="h-4 w-4" /> User Management
       </Button>
-      <Button variant="ghost" className="justify-start gap-3">
+      <Button 
+        variant={activeTab === "alerts" ? "secondary" : "ghost"} 
+        className={`justify-start gap-3 ${activeTab === "alerts" ? "bg-primary/10 text-primary" : ""}`}
+        onClick={() => {
+          setActiveTab("alerts");
+          onItemClick?.();
+        }}
+      >
         <Bell className="h-4 w-4" /> System Alerts
       </Button>
     </nav>
@@ -129,6 +167,23 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const triggerRandomNotification = () => {
+      const randomHospital = HOSPITALS[Math.floor(Math.random() * HOSPITALS.length)];
+      const randomGender = Math.random() > 0.5 ? "Male" : "Female";
+      
+      toast({
+        title: "New Birth Registration",
+        description: `A ${randomGender} child was just registered at ${randomHospital.name} (${randomHospital.zone} Zone).`,
+      });
+    };
+
+    // Initial random delay then every 15-25 seconds
+    const intervalId = setInterval(triggerRandomNotification, 15000 + Math.random() * 10000);
+    return () => clearInterval(intervalId);
+  }, [toast]);
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
@@ -185,65 +240,33 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Real-time Histogram Section */}
               <div className="grid grid-cols-1 gap-8">
                 <RealTimeBirthHistogram />
               </div>
 
-              {/* Quick Stats Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                <Card className="bg-card">
-                  <CardHeader className="pb-2">
-                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-primary">Total Births (YTD)</CardDescription>
-                    <CardTitle className="text-3xl lg:text-4xl font-headline">1,248,932</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-primary">
-                      <TrendingUp className="h-4 w-4" />
-                      <span className="text-sm font-bold">+12.4%</span>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-card">
-                  <CardHeader className="pb-2">
-                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-600">Active Facilities</CardDescription>
-                    <CardTitle className="text-3xl lg:text-4xl font-headline">14,281</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-emerald-600">
-                      <Activity className="h-4 w-4" />
-                      <span className="text-sm font-bold">98.2%</span>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-card">
-                  <CardHeader className="pb-2">
-                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-emerald-600">Certificates Issued</CardDescription>
-                    <CardTitle className="text-3xl lg:text-4xl font-headline">892,122</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-emerald-600">
-                      <Baby className="h-4 w-4" />
-                      <span className="text-sm font-bold">71% verified</span>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-card border-primary/20">
-                  <CardHeader className="pb-2">
-                    <CardDescription className="text-xs uppercase font-bold tracking-widest text-primary">Today's Forecast</CardDescription>
-                    <CardTitle className="text-3xl lg:text-4xl font-headline">~1,150</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-primary">
-                      <TrendingUp className="h-4 w-4" />
-                      <span className="text-sm font-bold">Stable</span>
-                    </div>
-                  </CardContent>
-                </Card>
+                {[
+                  { label: "Total Births (YTD)", value: "1,248,932", icon: TrendingUp, color: "text-primary", trend: "+12.4%" },
+                  { label: "Active Facilities", value: "14,281", icon: Activity, color: "text-accent", trend: "98.2%" },
+                  { label: "Certificates Issued", value: "892,122", icon: Baby, color: "text-accent", trend: "71% verified" },
+                  { label: "Today's Forecast", value: "~1,150", icon: ShieldCheck, color: "text-primary", trend: "Stable" },
+                ].map((stat, i) => (
+                  <Card key={i} className="bg-card">
+                    <CardHeader className="pb-2">
+                      <CardDescription className={cn("text-xs uppercase font-bold tracking-widest", stat.color)}>{stat.label}</CardDescription>
+                      <CardTitle className="text-3xl lg:text-4xl font-headline">{stat.value}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className={cn("flex items-center gap-2", stat.color)}>
+                        <stat.icon className="h-4 w-4" />
+                        <span className="text-sm font-bold">{stat.trend}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Main Chart */}
                 <Card className="lg:col-span-2">
                   <CardHeader>
                     <CardTitle className="font-headline">Birth Volume by State</CardTitle>
@@ -269,7 +292,6 @@ export default function AdminDashboard() {
                   </CardContent>
                 </Card>
 
-                {/* Side Chart */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-headline">Monthly Trend</CardTitle>
@@ -330,6 +352,134 @@ export default function AdminDashboard() {
           {activeTab === "registration" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <RegistrationForm />
+            </div>
+          )}
+
+          {activeTab === "states" && (
+            <div className="space-y-8 animate-in fade-in duration-500">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl font-headline font-bold">State Distribution</h1>
+                  <p className="text-muted-foreground">Detailed demographic performance by Federation units.</p>
+                </div>
+                <Button variant="outline" size="sm" className="gap-2"><Download className="h-4 w-4" /> Download Report</Button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {stateData.map((state, i) => (
+                  <Card key={i}>
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="font-headline">{state.name}</CardTitle>
+                        <Badge variant="secondary">{state.growth > 0 ? `+${state.growth}%` : `${state.growth}%`}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-end">
+                          <span className="text-4xl font-headline font-bold">{state.births.toLocaleString()}</span>
+                          <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Registrations</span>
+                        </div>
+                        <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary" 
+                            style={{ width: `${(state.births / 5000) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "users" && (
+            <div className="space-y-8 animate-in fade-in duration-500">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl font-headline font-bold">User Management</h1>
+                  <p className="text-muted-foreground">Manage administrative and field personnel access.</p>
+                </div>
+                <Button className="gap-2"><UserPlus className="h-4 w-4" /> Add New User</Button>
+              </div>
+
+              <Card>
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>User Name</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead className="hidden md:table-cell">Email Address</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {mockUsers.map((user, i) => (
+                        <TableRow key={i}>
+                          <TableCell className="font-bold">{user.name}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="border-primary/20 text-primary">{user.role}</Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell text-muted-foreground">{user.email}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <div className={cn("h-2 w-2 rounded-full", user.status === "Active" ? "bg-accent" : "bg-orange-400")} />
+                              <span className="text-sm">{user.status}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right space-x-2">
+                            <Button variant="ghost" size="sm">Edit</Button>
+                            <Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === "alerts" && (
+            <div className="space-y-8 animate-in fade-in duration-500">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl font-headline font-bold">System Alerts</h1>
+                  <p className="text-muted-foreground">Monitor system health and security integrity.</p>
+                </div>
+                <Button variant="outline" size="sm">Mark all as Read</Button>
+              </div>
+
+              <div className="grid gap-4">
+                {mockAlerts.map((alert, i) => (
+                  <Card key={i} className={cn(
+                    "border-l-4",
+                    alert.severity === "high" ? "border-l-destructive" : 
+                    alert.severity === "medium" ? "border-l-orange-400" : "border-l-accent"
+                  )}>
+                    <CardHeader className="flex flex-row items-center gap-4 py-4">
+                      <div className={cn(
+                        "h-10 w-10 rounded-full flex items-center justify-center",
+                        alert.severity === "high" ? "bg-destructive/10 text-destructive" : 
+                        alert.severity === "medium" ? "bg-orange-100 text-orange-600" : "bg-accent/10 text-accent"
+                      )}>
+                        {alert.severity === "high" ? <AlertTriangle className="h-5 w-5" /> : <Bell className="h-5 w-5" />}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="text-base font-bold">{alert.type} Notification</CardTitle>
+                          <span className="text-xs text-muted-foreground">{alert.time}</span>
+                        </div>
+                        <CardDescription className="text-foreground">{alert.message}</CardDescription>
+                      </div>
+                      <Button variant="ghost" size="sm">Dismiss</Button>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
             </div>
           )}
         </div>
