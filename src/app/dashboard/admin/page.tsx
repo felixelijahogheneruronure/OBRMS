@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -10,7 +9,7 @@ import {
 } from 'recharts';
 import { 
   Download, Filter, Map, Users, TrendingUp, Bell, Search, Activity, 
-  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2, Printer, Eye
+  Baby, PlusCircle, Menu, ShieldCheck, AlertTriangle, UserPlus, Trash2, Printer, Eye, FileText
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -65,15 +64,6 @@ const stateData = [
   { name: 'Taraba', births: 2900, growth: 0.5 },
   { name: 'Yobe', births: 2700, growth: 0.4 },
   { name: 'Zamfara', births: 3100, growth: 0.6 },
-];
-
-const monthlyTrend = [
-  { month: 'Jan', count: 12000 },
-  { month: 'Feb', count: 13500 },
-  { month: 'Mar', count: 12800 },
-  { month: 'Apr', count: 14200 },
-  { month: 'May', count: 15100 },
-  { month: 'Jun', count: 14800 },
 ];
 
 const recentSubmissions = [
@@ -196,6 +186,16 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick }: NavProps) => (
         <PlusCircle className="h-4 w-4" /> New Registration
       </Button>
       <Button 
+        variant={activeTab === "certificates" ? "secondary" : "ghost"} 
+        className={cn("justify-start gap-3", activeTab === "certificates" && "bg-primary/10 text-primary")}
+        onClick={() => {
+          setActiveTab("certificates");
+          onItemClick?.();
+        }}
+      >
+        <FileText className="h-4 w-4" /> Issued Certificates
+      </Button>
+      <Button 
         variant={activeTab === "states" ? "secondary" : "ghost"} 
         className={cn("justify-start gap-3", activeTab === "states" && "bg-primary/10 text-primary")}
         onClick={() => {
@@ -260,6 +260,7 @@ export default function AdminDashboard() {
   const [isMounted, setIsMounted] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [isCertOpen, setIsCertOpen] = useState(false);
+  const [certSearchQuery, setCertSearchQuery] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -296,7 +297,11 @@ export default function AdminDashboard() {
     setIsCertOpen(true);
   };
 
-  const chartData = [...stateData].sort((a, b) => b.births - a.births).slice(0, 10);
+  const filteredCertificates = recentSubmissions.filter(cert => 
+    cert.childName.toLowerCase().includes(certSearchQuery.toLowerCase()) ||
+    cert.id.toLowerCase().includes(certSearchQuery.toLowerCase())
+  );
+
   const sortedStates = [...stateData].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
@@ -461,6 +466,72 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          {activeTab === "certificates" && (
+            <div className="space-y-8 animate-in fade-in duration-500 print:hidden">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl font-headline font-bold">Issued Certificates</h1>
+                  <p className="text-muted-foreground">Manage and reprint official OBRMS birth certificates.</p>
+                </div>
+                <div className="relative max-w-sm w-full">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Search by name or Record ID..." 
+                    className="pl-10 h-11"
+                    value={certSearchQuery}
+                    onChange={(e) => setCertSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <Card>
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/50">
+                        <TableHead>Record ID</TableHead>
+                        <TableHead>Child's Full Name</TableHead>
+                        <TableHead className="hidden md:table-cell">Mother's Name</TableHead>
+                        <TableHead className="hidden lg:table-cell">Facility</TableHead>
+                        <TableHead className="hidden sm:table-cell">Reg. Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredCertificates.length > 0 ? (
+                        filteredCertificates.map((cert, i) => (
+                          <TableRow key={i} className="group hover:bg-primary/5 transition-colors">
+                            <TableCell className="font-mono text-xs font-bold text-primary">{cert.id}</TableCell>
+                            <TableCell className="font-bold">{cert.childName}</TableCell>
+                            <TableCell className="hidden md:table-cell text-sm">{cert.motherName}</TableCell>
+                            <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{cert.facility}</TableCell>
+                            <TableCell className="hidden sm:table-cell text-xs">{cert.dateRegistered}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button variant="ghost" size="sm" onClick={() => openCertificate(cert)} className="h-8 gap-2">
+                                  <Eye className="h-4 w-4" /> <span className="hidden xl:inline">View</span>
+                                </Button>
+                                <Button size="sm" onClick={() => openCertificate(cert)} className="h-8 gap-2">
+                                  <Printer className="h-4 w-4" /> <span className="hidden xl:inline">Print</span>
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={6} className="h-32 text-center text-muted-foreground italic">
+                            No records found matching "{certSearchQuery}"
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           {activeTab === "states" && (
             <div className="space-y-8 animate-in fade-in duration-500 print:hidden">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -497,7 +568,97 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* User Management and Alerts omitted for brevity, they are unchanged */}
+          {activeTab === "users" && (
+            <div className="space-y-8 animate-in fade-in duration-500 print:hidden">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl font-headline font-bold">User Management</h1>
+                  <p className="text-muted-foreground">Manage administrative access levels for government and health officials.</p>
+                </div>
+                <Button className="gap-2"><UserPlus className="h-4 w-4" /> Add New Officer</Button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle className="font-headline">Authorized Personnel</CardTitle>
+                    <CardDescription>Current active officers with system access.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead className="hidden md:table-cell">Status</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {mockUsers.map((user, i) => (
+                          <TableRow key={i}>
+                            <TableCell className="font-bold">{user.name}</TableCell>
+                            <TableCell className="text-xs uppercase tracking-wider font-bold text-muted-foreground">{user.role}</TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              <Badge variant={user.status === 'Active' ? 'default' : 'secondary'} className={user.status === 'Active' ? 'bg-accent/20 text-accent border-none' : ''}>
+                                {user.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="icon" className="h-8 w-8"><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-headline">Access Policy</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
+                      <p className="text-xs font-bold text-primary uppercase mb-1">MFA Required</p>
+                      <p className="text-xs text-muted-foreground">Multi-factor authentication is mandatory for all Master Admins.</p>
+                    </div>
+                    <div className="p-3 bg-accent/5 rounded-lg border border-accent/10">
+                      <p className="text-xs font-bold text-accent uppercase mb-1">Session Timeout</p>
+                      <p className="text-xs text-muted-foreground">Admin sessions expire after 15 minutes of inactivity.</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "alerts" && (
+            <div className="space-y-8 animate-in fade-in duration-500 print:hidden">
+              <h1 className="text-3xl font-headline font-bold">System Security Alerts</h1>
+              <div className="grid grid-cols-1 gap-4">
+                {mockAlerts.map((alert, i) => (
+                  <Card key={i} className={cn(
+                    "border-l-4",
+                    alert.severity === 'high' ? "border-l-destructive" : alert.severity === 'medium' ? "border-l-primary" : "border-l-accent"
+                  )}>
+                    <CardHeader className="py-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {alert.severity === 'high' ? <AlertTriangle className="h-5 w-5 text-destructive" /> : <ShieldCheck className="h-5 w-5 text-primary" />}
+                          <CardTitle className="text-lg font-headline">{alert.type} Notification</CardTitle>
+                        </div>
+                        <Badge variant="outline" className="text-[10px]">{alert.time}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="py-2">
+                      <p className="text-sm">{alert.message}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
