@@ -66,7 +66,7 @@ const stateData = [
   { name: 'Zamfara', births: 3100, growth: 0.6 },
 ];
 
-const recentSubmissions = [
+const mockSubmissions = [
   { 
     facility: "Lagos Island Maternity Hospital", 
     location: "Lagos State", 
@@ -103,41 +103,15 @@ const recentSubmissions = [
     fatherName: "Emeka Nwachukwu",
     dateRegistered: "2026-02-23"
   },
-  { 
-    facility: "King's Care Hospital Limited", 
-    location: "Abuja (FCT)", 
-    id: "FC-BR-2024-2201", 
-    time: "48 mins ago",
-    childName: "Maryam Ibrahim",
-    dob: "February 21, 2026",
-    gender: "Female",
-    motherName: "Zainab Ibrahim",
-    fatherName: "Musa Ibrahim",
-    dateRegistered: "2026-02-22"
-  },
-  { 
-    facility: "BU Clinic/Hospital Ltd", 
-    location: "Delta State", 
-    id: "DT-BR-2024-8849", 
-    time: "55 mins ago",
-    childName: "Oghenetega Efe",
-    dob: "February 20, 2026",
-    gender: "Male",
-    motherName: "Ese Efe",
-    fatherName: "Victor Efe",
-    dateRegistered: "2026-02-21"
-  },
 ];
 
 const mockUsers = [
   { name: "Adekunle Olawale", role: "Master Admin", email: "a.olawale@obrms.gov.ng", status: "Active" },
   { name: "Chioma Okoro", role: "Zonal Supervisor", email: "c.okoro@obrms.gov.ng", status: "Active" },
-  { name: "Musa Ibrahim", role: "Verification Officer", email: "m.ibrahim@obrms.gov.ng", status: "Away" },
 ];
 
 const mockAlerts = [
   { type: "Security", message: "Failed login attempt detected from IP 192.168.1.45", time: "2 hours ago", severity: "high" },
-  { type: "System", message: "Database maintenance scheduled for Sunday 2AM WAT", time: "5 hours ago", severity: "medium" },
   { type: "Data", message: "Discrepancy in reporting volume for Kano North Zone", time: "1 day ago", severity: "low" },
 ];
 
@@ -269,11 +243,17 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [allSubmissions, setAllSubmissions] = useState<any[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [isCertOpen, setIsCertOpen] = useState(false);
   const [certSearchQuery, setCertSearchQuery] = useState("");
   const [userName, setUserName] = useState("Administrator");
   const { toast } = useToast();
+
+  const loadData = () => {
+    const saved = JSON.parse(localStorage.getItem('obrms_registrations') || '[]');
+    setAllSubmissions([...saved, ...mockSubmissions]);
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -281,6 +261,12 @@ export default function AdminDashboard() {
     if (storedName) {
       setUserName(storedName);
     }
+    loadData();
+
+    // Listen for data updates from other components
+    const handleUpdate = () => loadData();
+    window.addEventListener('obrms_data_update', handleUpdate);
+    return () => window.removeEventListener('obrms_data_update', handleUpdate);
   }, []);
 
   useEffect(() => {
@@ -291,12 +277,12 @@ export default function AdminDashboard() {
       const randomGender = Math.random() > 0.5 ? "Male" : "Female";
       
       toast({
-        title: "New Birth Registration",
-        description: `A ${randomGender} child was just registered at ${randomHospital.name} (${randomHospital.zone} Zone).`,
+        title: "Live Activity Monitor",
+        description: `Incoming report: A ${randomGender} child registered at ${randomHospital.name}.`,
       });
     };
 
-    const intervalId = setInterval(triggerRandomNotification, 15000 + Math.random() * 10000);
+    const intervalId = setInterval(triggerRandomNotification, 20000 + Math.random() * 15000);
     return () => clearInterval(intervalId);
   }, [isMounted, toast]);
 
@@ -313,7 +299,7 @@ export default function AdminDashboard() {
     setIsCertOpen(true);
   };
 
-  const filteredCertificates = recentSubmissions.filter(cert => 
+  const filteredCertificates = allSubmissions.filter(cert => 
     cert.childName.toLowerCase().includes(certSearchQuery.toLowerCase()) ||
     cert.id.toLowerCase().includes(certSearchQuery.toLowerCase())
   );
@@ -382,11 +368,6 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                 </div>
-                <div className="p-2 border-t border-border text-center">
-                  <Button variant="ghost" size="sm" className="w-full text-xs text-primary" onClick={() => setActiveTab("alerts")}>
-                    View All Activity Log
-                  </Button>
-                </div>
               </PopoverContent>
             </Popover>
           </div>
@@ -401,7 +382,7 @@ export default function AdminDashboard() {
                   <p className="text-muted-foreground text-sm lg:text-base">Comprehensive real-time birthrate monitoring for Nigeria.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20">LIVE</Badge>
+                  <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20">LIVE MONITORING</Badge>
                   <Button variant="outline" size="sm" className="gap-2"><Filter className="h-4 w-4" /> Filters</Button>
                 </div>
               </div>
@@ -412,10 +393,10 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {[
-                  { label: "Total Births (YTD)", value: "1,248,932", icon: TrendingUp, color: "text-primary", trend: "+12.4%" },
+                  { label: "Total Births (YTD)", value: (1248932 + allSubmissions.length).toLocaleString(), icon: TrendingUp, color: "text-primary", trend: "+12.4%" },
                   { label: "Active Facilities", value: "14,281", icon: Activity, color: "text-accent", trend: "98.2%" },
-                  { label: "Certificates Issued", value: "892,122", icon: Baby, color: "text-accent", trend: "71% verified" },
-                  { label: "Today's Forecast", value: "~1,150", icon: ShieldCheck, color: "text-primary", trend: "Stable" },
+                  { label: "Certificates Issued", value: (892122 + allSubmissions.length).toLocaleString(), icon: Baby, color: "text-accent", trend: "71% verified" },
+                  { label: "New Submissions", value: allSubmissions.length.toString(), icon: ShieldCheck, color: "text-primary", trend: "Active" },
                 ].map((stat, i) => (
                   <Card key={i} className="bg-card">
                     <CardHeader className="pb-2">
@@ -435,7 +416,7 @@ export default function AdminDashboard() {
               <Card className="overflow-x-auto">
                 <CardHeader>
                   <CardTitle className="font-headline">Recent OBRMS Submissions</CardTitle>
-                  <CardDescription>Drill-down view of the latest verified birth records. Select a record to print the certificate.</CardDescription>
+                  <CardDescription>Drill-down view of the latest verified birth records.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Table>
@@ -449,7 +430,7 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {recentSubmissions.map((sub, i) => (
+                      {allSubmissions.slice(0, 10).map((sub, i) => (
                         <TableRow key={i}>
                           <TableCell className="font-bold">{sub.childName}</TableCell>
                           <TableCell className="hidden md:table-cell text-xs">{sub.facility}</TableCell>
@@ -590,16 +571,15 @@ export default function AdminDashboard() {
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                   <h1 className="text-3xl font-headline font-bold">User Management</h1>
-                  <p className="text-muted-foreground">Manage administrative access levels for government and health officials.</p>
+                  <p className="text-muted-foreground">Manage administrative access levels.</p>
                 </div>
-                <Button className="gap-2"><UserPlus className="h-4 w-4" /> Add New Officer</Button>
+                <Button className="gap-2"><UserPlus className="h-4 w-4" /> Add Officer</Button>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <Card className="lg:col-span-2">
                   <CardHeader>
                     <CardTitle className="font-headline">Authorized Personnel</CardTitle>
-                    <CardDescription>Current active officers with system access.</CardDescription>
                   </CardHeader>
                   <CardContent className="p-0">
                     <Table>
@@ -617,7 +597,7 @@ export default function AdminDashboard() {
                             <TableCell className="font-bold">{user.name}</TableCell>
                             <TableCell className="text-xs uppercase tracking-wider font-bold text-muted-foreground">{user.role}</TableCell>
                             <TableCell className="hidden md:table-cell">
-                              <Badge variant={user.status === 'Active' ? 'default' : 'secondary'} className={user.status === 'Active' ? 'bg-accent/20 text-accent border-none' : ''}>
+                              <Badge variant={user.status === 'Active' ? 'default' : 'secondary'}>
                                 {user.status}
                               </Badge>
                             </TableCell>
@@ -628,22 +608,6 @@ export default function AdminDashboard() {
                         ))}
                       </TableBody>
                     </Table>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-headline">Access Policy</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
-                      <p className="text-xs font-bold text-primary uppercase mb-1">MFA Required</p>
-                      <p className="text-xs text-muted-foreground">Multi-factor authentication is mandatory for all Master Admins.</p>
-                    </div>
-                    <div className="p-3 bg-accent/5 rounded-lg border border-accent/10">
-                      <p className="text-xs font-bold text-accent uppercase mb-1">Session Timeout</p>
-                      <p className="text-xs text-muted-foreground">Admin sessions expire after 15 minutes of inactivity.</p>
-                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -657,7 +621,7 @@ export default function AdminDashboard() {
                 {mockAlerts.map((alert, i) => (
                   <Card key={i} className={cn(
                     "border-l-4",
-                    alert.severity === 'high' ? "border-l-destructive" : alert.severity === 'medium' ? "border-l-primary" : "border-l-accent"
+                    alert.severity === 'high' ? "border-l-destructive" : "border-l-primary"
                   )}>
                     <CardHeader className="py-4">
                       <div className="flex items-center justify-between">

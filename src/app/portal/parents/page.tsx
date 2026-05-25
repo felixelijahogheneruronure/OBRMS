@@ -14,21 +14,44 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 
 export default function ParentPortal() {
   const [regId, setRegId] = useState("");
+  const [parentSurname, setParentSurname] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [result, setResult] = useState<null | any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSearching(true);
-    // Simulate API call
+    setError(null);
+    setResult(null);
+
+    // Simulate API call with LocalStorage check
     setTimeout(() => {
-      setResult({
-        name: "Ifeanyi Chinedu Okeke",
-        dob: "August 12, 2024",
-        facility: "Enugu State University Teaching Hospital",
-        regId: "EN-BR-2024-5512",
-        status: "Verified"
-      });
+      const savedRegistrations = JSON.parse(localStorage.getItem('obrms_registrations') || '[]');
+      
+      // Mock historical data search
+      const mockRecords = [
+        {
+          childName: "Ifeanyi Chinedu Okeke",
+          dob: "August 12, 2024",
+          facility: "Enugu State University Teaching Hospital",
+          regId: "EN-BR-2024-5512",
+          status: "Verified"
+        }
+      ];
+
+      const allRecords = [...savedRegistrations, ...mockRecords];
+      
+      const found = allRecords.find(record => 
+        record.id === regId || record.regId === regId
+      );
+
+      if (found) {
+        setResult(found);
+      } else {
+        setError("No official record found matching this ID. Please check your hospital documentation and try again.");
+      }
+      
       setIsSearching(false);
     }, 1500);
   };
@@ -92,13 +115,13 @@ export default function ParentPortal() {
         <div className="max-w-2xl w-full space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-3xl lg:text-4xl font-headline font-bold">Certificate Portal</h1>
-            <p className="text-muted-foreground text-sm lg:text-base">Retrieve your child&apos;s official birth certificate using the OBRMS registration ID provided by your hospital.</p>
+            <p className="text-muted-foreground text-sm lg:text-base">Retrieve your child's official birth certificate using the OBRMS registration ID.</p>
           </div>
 
           <Card className="border-border shadow-xl">
             <CardHeader>
               <CardTitle className="text-xl">Search Registration</CardTitle>
-              <CardDescription>Enter the Registration ID and parent surname to verify and download.</CardDescription>
+              <CardDescription>Enter the Registration ID and mother's surname to verify.</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSearch} className="space-y-6">
@@ -111,11 +134,19 @@ export default function ParentPortal() {
                       className="h-11"
                       value={regId}
                       onChange={(e) => setRegId(e.target.value)}
+                      required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="parentName">Mother&apos;s Surname</Label>
-                    <Input id="parentName" placeholder="Enter surname" className="h-11" />
+                    <Label htmlFor="parentName">Mother's Surname</Label>
+                    <Input 
+                      id="parentName" 
+                      placeholder="Enter surname" 
+                      className="h-11" 
+                      value={parentSurname}
+                      onChange={(e) => setParentSurname(e.target.value)}
+                      required
+                    />
                   </div>
                 </div>
                 <Button type="submit" className="w-full h-12 text-lg gap-2" disabled={isSearching}>
@@ -124,6 +155,14 @@ export default function ParentPortal() {
               </form>
             </CardContent>
           </Card>
+
+          {error && (
+            <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Search Failed</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
           {result && (
             <div className="animate-in fade-in slide-in-from-top-4 duration-500">
@@ -139,8 +178,8 @@ export default function ParentPortal() {
                 <CardHeader className="bg-primary/10 border-b border-primary/20">
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div>
-                      <CardTitle className="font-headline text-xl lg:text-2xl">{result.name}</CardTitle>
-                      <CardDescription className="font-medium text-primary">Registration: {result.regId}</CardDescription>
+                      <CardTitle className="font-headline text-xl lg:text-2xl">{result.childName || result.name}</CardTitle>
+                      <CardDescription className="font-medium text-primary">Registration: {result.id || result.regId}</CardDescription>
                     </div>
                     <Badge variant="outline" className="bg-primary/20 text-primary border-primary">OFFICIAL RECORD</Badge>
                   </div>
@@ -169,10 +208,10 @@ export default function ParentPortal() {
             </div>
           )}
 
-          {!result && !isSearching && (
+          {!result && !isSearching && !error && (
             <div className="flex items-start gap-3 p-4 bg-secondary/20 rounded-lg text-sm text-muted-foreground">
               <AlertCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <p>Common OBRMS IDs look like <span className="font-mono text-primary font-bold">ST-BR-2024-XXXX</span>. Check your hospital handout if you can&apos;t find it.</p>
+              <p>Common OBRMS IDs look like <span className="font-mono text-primary font-bold">ST-BR-2024-XXXX</span>. Check your hospital handout if you can't find it.</p>
             </div>
           )}
         </div>

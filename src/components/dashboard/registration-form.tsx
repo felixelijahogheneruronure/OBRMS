@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight, CheckCircle2, Baby, Calendar, User, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const steps = [
@@ -22,12 +21,66 @@ const steps = [
 export function RegistrationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    gender: '',
+    weight: '',
+    dob: '',
+    time: '',
+    facility: '',
+    state: '',
+    lga: '',
+    motherName: '',
+    motherNin: '',
+    fatherName: '',
+    fatherNin: '',
+  });
+  const [generatedId, setGeneratedId] = useState("");
   const { toast } = useToast();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const saveRegistration = () => {
+    const prefix = formData.state?.slice(0, 2).toUpperCase() || "NG";
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const year = new Date().getFullYear();
+    const newId = `${prefix}-BR-${year}-${randomNum}`;
+    setGeneratedId(newId);
+
+    const newRecord = {
+      id: newId,
+      childName: `${formData.firstName} ${formData.lastName}`,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      dob: formData.dob || new Date().toLocaleDateString(),
+      gender: formData.gender,
+      facility: formData.facility || localStorage.getItem('obrms_facility') || "General Hospital",
+      motherName: formData.motherName,
+      fatherName: formData.fatherName,
+      dateRegistered: new Date().toISOString().split('T')[0],
+      time: "Just now"
+    };
+
+    const existing = JSON.parse(localStorage.getItem('obrms_registrations') || '[]');
+    localStorage.setItem('obrms_registrations', JSON.stringify([newRecord, ...existing]));
+    
+    // Dispatch custom event for real-time updates across components
+    window.dispatchEvent(new Event('obrms_data_update'));
+  };
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      saveRegistration();
       setIsSubmitted(true);
       toast({
         title: "Registration Complete",
@@ -50,7 +103,7 @@ export function RegistrationForm() {
             <CheckCircle2 className="h-12 w-12 text-primary" />
           </div>
           <CardTitle className="text-3xl font-headline">Registration Successful</CardTitle>
-          <CardDescription className="text-lg">Reference ID: LG-BR-2024-88492</CardDescription>
+          <CardDescription className="text-lg">Reference ID: {generatedId}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
@@ -61,7 +114,25 @@ export function RegistrationForm() {
           <Button className="w-full h-12 text-lg">
             Download Certificate
           </Button>
-          <Button variant="outline" className="w-full" onClick={() => setIsSubmitted(false)}>
+          <Button variant="outline" className="w-full" onClick={() => {
+            setIsSubmitted(false);
+            setCurrentStep(0);
+            setFormData({
+              firstName: '',
+              lastName: '',
+              gender: '',
+              weight: '',
+              dob: '',
+              time: '',
+              facility: '',
+              state: '',
+              lga: '',
+              motherName: '',
+              motherNin: '',
+              fatherName: '',
+              fatherNin: '',
+            });
+          }}>
             Start New Registration
           </Button>
         </CardFooter>
@@ -100,28 +171,28 @@ export function RegistrationForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 animate-in fade-in slide-in-from-right-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" placeholder="Enter child's first name" className="h-11" />
+                <Input id="firstName" value={formData.firstName} onChange={handleInputChange} placeholder="Enter child's first name" className="h-11" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName">Surname</Label>
-                <Input id="lastName" placeholder="Enter child's surname" className="h-11" />
+                <Input id="lastName" value={formData.lastName} onChange={handleInputChange} placeholder="Enter child's surname" className="h-11" />
               </div>
               <div className="space-y-2">
                 <Label>Gender</Label>
-                <Select>
+                <Select onValueChange={(v) => handleSelectChange('gender', v)}>
                   <SelectTrigger className="h-11">
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>Weight at Birth (kg)</Label>
-                <Input type="number" step="0.1" placeholder="e.g. 3.2" className="h-11" />
+                <Input id="weight" type="number" step="0.1" value={formData.weight} onChange={handleInputChange} placeholder="e.g. 3.2" className="h-11" />
               </div>
             </div>
           )}
@@ -130,49 +201,71 @@ export function RegistrationForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 animate-in fade-in slide-in-from-right-4">
               <div className="space-y-2">
                 <Label>Date of Birth</Label>
-                <Input type="date" className="h-11" />
+                <Input id="dob" type="date" value={formData.dob} onChange={handleInputChange} className="h-11" />
               </div>
               <div className="space-y-2">
                 <Label>Time of Birth</Label>
-                <Input type="time" className="h-11" />
+                <Input id="time" type="time" value={formData.time} onChange={handleInputChange} className="h-11" />
               </div>
               <div className="space-y-2 md:col-span-2">
                 <Label>Place of Birth (Facility Name)</Label>
-                <Input placeholder="Search medical facility..." className="h-11" />
+                <Input id="facility" value={formData.facility} onChange={handleInputChange} placeholder="Search medical facility..." className="h-11" />
               </div>
               <div className="space-y-2">
                 <Label>State of Birth</Label>
-                <Select>
+                <Select onValueChange={(v) => handleSelectChange('state', v)}>
                   <SelectTrigger className="h-11">
                     <SelectValue placeholder="Select state" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="lagos">Lagos</SelectItem>
-                    <SelectItem value="kano">Kano</SelectItem>
-                    <SelectItem value="rivers">Rivers</SelectItem>
+                    <SelectItem value="Lagos">Lagos</SelectItem>
+                    <SelectItem value="Kano">Kano</SelectItem>
+                    <SelectItem value="Rivers">Rivers</SelectItem>
+                    <SelectItem value="Abuja">Abuja (FCT)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>LGA of Birth</Label>
-                <Input placeholder="Enter LGA" className="h-11" />
+                <Input id="lga" value={formData.lga} onChange={handleInputChange} placeholder="Enter LGA" className="h-11" />
               </div>
             </div>
           )}
 
-          {currentStep > 1 && (
+          {currentStep === 2 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 animate-in fade-in slide-in-from-right-4">
+              <div className="space-y-2 md:col-span-2">
+                <Label>Mother's Full Name</Label>
+                <Input id="motherName" value={formData.motherName} onChange={handleInputChange} placeholder="Enter mother's name" className="h-11" />
+              </div>
+              <div className="space-y-2">
+                <Label>NIN</Label>
+                <Input id="motherNin" value={formData.motherNin} onChange={handleInputChange} placeholder="National Identity Number" className="h-11" />
+              </div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 animate-in fade-in slide-in-from-right-4">
+              <div className="space-y-2 md:col-span-2">
+                <Label>Father's Full Name</Label>
+                <Input id="fatherName" value={formData.fatherName} onChange={handleInputChange} placeholder="Enter father's name" className="h-11" />
+              </div>
+              <div className="space-y-2">
+                <Label>NIN</Label>
+                <Input id="fatherNin" value={formData.fatherNin} onChange={handleInputChange} placeholder="National Identity Number" className="h-11" />
+              </div>
+            </div>
+          )}
+
+          {currentStep === 4 && (
             <div className="flex flex-col items-center justify-center py-6 md:py-12 text-center text-muted-foreground">
-              <User className="h-10 w-10 md:h-12 md:w-12 mb-4 opacity-20" />
-              <p className="text-sm md:text-base">Additional sections for {steps[currentStep].title} follow standard demographic data requirements.</p>
-              <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full text-left">
-                <div className="space-y-2">
-                  <Label>Full Name</Label>
-                  <Input placeholder="Enter details" className="h-11" />
-                </div>
-                <div className="space-y-2">
-                  <Label>NIN (Optional)</Label>
-                  <Input placeholder="National Identity Number" className="h-11" />
-                </div>
+              <MapPin className="h-10 w-10 md:h-12 md:w-12 mb-4 opacity-20 text-primary" />
+              <p className="text-sm md:text-base">Review and complete the registration process.</p>
+              <div className="mt-6 md:mt-8 p-4 bg-primary/5 rounded-lg border border-primary/10 w-full text-left">
+                <p className="text-xs font-bold text-primary uppercase mb-2">Registration Summary</p>
+                <p className="text-sm">Child: <strong>{formData.firstName} {formData.lastName}</strong></p>
+                <p className="text-sm">Facility: <strong>{formData.facility || "System Default"}</strong></p>
               </div>
             </div>
           )}
