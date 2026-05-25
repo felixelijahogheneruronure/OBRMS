@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Search, Download, FileCheck, AlertCircle, Menu, Home, Globe, Info } from "lucide-react";
+import { Search, Download, FileCheck, AlertCircle, Menu, Home, Globe, Info, Printer } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { BirthCertificateDocument } from "@/components/dashboard/birth-certificate-document";
 
 export default function ParentPortal() {
   const [regId, setRegId] = useState("");
@@ -18,6 +20,7 @@ export default function ParentPortal() {
   const [isSearching, setIsSearching] = useState(false);
   const [result, setResult] = useState<null | any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +38,11 @@ export default function ParentPortal() {
           childName: "Ifeanyi Chinedu Okeke",
           dob: "August 12, 2024",
           facility: "Enugu State University Teaching Hospital",
-          regId: "EN-BR-2024-5512",
+          id: "EN-BR-2024-5512",
+          gender: "Male",
+          motherName: "Ngozi Okeke",
+          fatherName: "Chinedu Okeke",
+          dateRegistered: "2024-08-12",
           status: "Verified"
         }
       ];
@@ -43,7 +50,7 @@ export default function ParentPortal() {
       const allRecords = [...savedRegistrations, ...mockRecords];
       
       const found = allRecords.find(record => 
-        record.id === regId || record.regId === regId
+        (record.id === regId || record.regId === regId)
       );
 
       if (found) {
@@ -54,6 +61,10 @@ export default function ParentPortal() {
       
       setIsSearching(false);
     }, 1500);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
@@ -197,11 +208,11 @@ export default function ParentPortal() {
                   </div>
                 </CardContent>
                 <CardFooter className="bg-card/50 p-4 lg:p-6 flex flex-col sm:flex-row gap-3">
-                  <Button className="w-full sm:flex-1 h-12 gap-2 text-lg">
+                  <Button className="w-full sm:flex-1 h-12 gap-2 text-lg" onClick={() => setIsPreviewOpen(true)}>
                     <Download className="h-5 w-5" /> Download Certificate
                   </Button>
-                  <Button variant="outline" className="h-12 w-full sm:w-12 p-0">
-                    <FileCheck className="h-6 w-6" />
+                  <Button variant="outline" className="h-12 w-full sm:w-12 p-0" onClick={() => setIsPreviewOpen(true)}>
+                    <Printer className="h-6 w-6" />
                   </Button>
                 </CardFooter>
               </Card>
@@ -230,6 +241,37 @@ export default function ParentPortal() {
           &copy; 2026 OBRMS Population Intelligence System. Federal Republic of Nigeria.
         </p>
       </footer>
+
+      {/* Certificate Preview Dialog */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="max-w-5xl w-[95vw] h-[90vh] overflow-y-auto p-0 gap-0 border-none bg-muted/30">
+          <DialogHeader className="p-6 bg-card border-b sticky top-0 z-50 flex flex-row items-center justify-between space-y-0 print:hidden">
+            <div>
+              <DialogTitle className="font-headline text-xl">Verified Digital Certificate</DialogTitle>
+              <p className="text-sm text-muted-foreground">Official Record: {result?.id || result?.regId}</p>
+            </div>
+            <Button onClick={handlePrint} className="gap-2">
+              <Printer className="h-4 w-4" /> Print / Save as PDF
+            </Button>
+          </DialogHeader>
+          <div className="p-4 md:p-8 bg-muted/20">
+            {result && (
+              <BirthCertificateDocument 
+                data={{
+                  childName: result.childName || result.name,
+                  dob: result.dob,
+                  gender: result.gender || "Not Specified",
+                  placeOfBirth: result.facility,
+                  motherName: result.motherName || "Verified Record",
+                  fatherName: result.fatherName || "Verified Record",
+                  regId: result.id || result.regId,
+                  dateRegistered: result.dateRegistered || new Date().toLocaleDateString()
+                }}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
