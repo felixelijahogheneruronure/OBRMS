@@ -151,10 +151,11 @@ interface NavProps {
 const SidebarNav = ({ activeTab, setActiveTab, onItemClick, userName }: NavProps) => {
   const initials = userName
     .split(' ')
+    .filter(Boolean)
     .map(n => n[0])
     .join('')
     .toUpperCase()
-    .slice(0, 2);
+    .slice(0, 2) || "AD";
 
   return (
     <div className="flex flex-col h-full gap-8">
@@ -251,7 +252,7 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick, userName }: NavProps
           <CardContent className="p-4 text-center">
             <p className="text-xs text-muted-foreground mb-3">Administrator Access</p>
             <div className="flex items-center gap-3 text-left">
-              <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs shrink-0">{initials || 'AD'}</div>
+              <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs shrink-0">{initials}</div>
               <div className="overflow-hidden">
                 <p className="text-sm font-bold truncate">{userName}</p>
                 <p className="text-[10px] uppercase text-muted-foreground truncate">Admin Officer</p>
