@@ -23,7 +23,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import { HOSPITALS } from "@/lib/hospitals";
 import { cn } from "@/lib/utils";
-import Image from "image";
+import Image from "next/image";
 import Link from "next/link";
 
 const stateData = [
