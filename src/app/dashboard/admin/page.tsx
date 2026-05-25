@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
@@ -17,10 +17,11 @@ import { Badge } from "@/components/ui/badge";
 import { RegistrationForm } from "@/components/dashboard/registration-form";
 import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { HOSPITALS } from "@/lib/hospitals";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image from "image";
 import Link from "next/link";
 
 const stateData = [
@@ -226,7 +227,6 @@ export default function AdminDashboard() {
     return null;
   }
 
-  // Sort stateData by births descending for charts, but alphabetically for breakdown
   const chartData = [...stateData].sort((a, b) => b.births - a.births).slice(0, 10);
   const sortedStates = [...stateData].sort((a, b) => a.name.localeCompare(b.name));
 
@@ -264,10 +264,40 @@ export default function AdminDashboard() {
             <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
               <Download className="h-4 w-4" /> Export
             </Button>
-            <Button size="icon" variant="ghost" className="relative">
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-2 right-2 h-2 w-2 bg-primary rounded-full border-2 border-background" />
-            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button size="icon" variant="ghost" className="relative">
+                  <Bell className="h-4 w-4" />
+                  <span className="absolute top-2 right-2 h-2 w-2 bg-primary rounded-full border-2 border-background" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="p-4 border-b border-border">
+                  <h4 className="font-headline font-bold">Recent System Alerts</h4>
+                </div>
+                <div className="max-h-[300px] overflow-y-auto">
+                  {mockAlerts.map((alert, i) => (
+                    <div key={i} className="p-4 border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer" onClick={() => setActiveTab("alerts")}>
+                      <div className="flex justify-between items-start mb-1">
+                        <span className={cn(
+                          "text-[10px] font-bold uppercase tracking-wider",
+                          alert.severity === 'high' ? "text-destructive" : "text-primary"
+                        )}>
+                          {alert.type}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">{alert.time}</span>
+                      </div>
+                      <p className="text-xs text-foreground font-medium">{alert.message}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-2 border-t border-border text-center">
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-primary" onClick={() => setActiveTab("alerts")}>
+                    View All Activity Log
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </header>
 
