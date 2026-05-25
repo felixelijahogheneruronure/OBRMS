@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -40,14 +39,14 @@ export default function LoginPage() {
             </div>
             <span className="text-2xl font-headline font-bold text-primary">LUMEN NG</span>
           </Link>
-          <h1 className="text-3xl font-headline font-bold">Facility Access</h1>
-          <p className="text-muted-foreground">Authorized medical personnel only.</p>
+          <h1 className="text-3xl font-headline font-bold">Administration Access</h1>
+          <p className="text-muted-foreground">Authorized medical and administrative personnel only.</p>
         </div>
 
         <Card className="border-border shadow-2xl bg-card">
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
-            <CardDescription>Select your facility and enter your credentials.</CardDescription>
+            <CardDescription>Select your facility and enter your administrative credentials.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-6">

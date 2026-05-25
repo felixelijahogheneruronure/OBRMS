@@ -30,7 +30,7 @@ export default function Home() {
           </nav>
           <div className="flex items-center gap-4">
             <Button variant="outline" asChild>
-              <Link href="/login">Facility Login</Link>
+              <Link href="/login">Administration Login</Link>
             </Button>
             <Button asChild>
               <Link href="/registration/new">New Registration</Link>
@@ -136,7 +136,7 @@ export default function Home() {
                 <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-background transition-colors">
                   <ClipboardCheck className="h-6 w-6" />
                 </div>
-                <CardTitle className="font-headline">Medical Intake</CardTitle>
+                <CardTitle className="font-headline">Administration Portal</CardTitle>
                 <CardDescription>Reporting portal for registered hospitals and primary health centers.</CardDescription>
               </CardHeader>
               <CardContent>
