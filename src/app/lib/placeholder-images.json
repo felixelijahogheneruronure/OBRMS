@@ -1,0 +1,17 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-nigeria",
+      "description": "Abstract medical and population data visual",
+      "imageUrl": "https://picsum.photos/seed/lumen-ng-hero/1200/600",
+      "imageHint": "medical data architecture"
+    },
+    {
+      "id": "facility-interior",
+      "description": "Modern medical facility interior in Nigeria",
+      "imageUrl": "https://picsum.photos/seed/lumen-ng-facility/800/600",
+      "imageHint": "hospital registration"
+    }
+  ]
+}
