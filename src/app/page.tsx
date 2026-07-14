@@ -37,7 +37,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-xl font-headline font-bold tracking-tight text-primary">OBRMS</span>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Online Birthrate Monitoring System</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Online Birthrate management System</span>
             </div>
           </Link>
 
@@ -117,7 +117,7 @@ export default function Home() {
               <span className="text-primary">Digitized.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Real-time monitoring of national birthrates across all 36 states. Ensuring every child is accounted for through secure, high-integrity data via OBRMS.
+              Real-time management of national birthrates across all 36 states. Ensuring every child is accounted for through secure, high-integrity data via OBRMS.
             </p>
           </div>
 
@@ -265,7 +265,7 @@ export default function Home() {
                   className="object-contain"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">© 2026 Federal Ministry of Health, Nigeria. <br />Online Birthrate Monitoring System.</p>
+              <p className="text-xs text-muted-foreground">© 2026 Federal Ministry of Health, Nigeria. <br />Online Birthrate management System.</p>
             </div>
           </div>
           <div className="flex gap-6">

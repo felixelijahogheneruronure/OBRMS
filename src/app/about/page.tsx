@@ -66,7 +66,7 @@ export default function ResourcesPage() {
         <div className="max-w-3xl space-y-4 text-center lg:text-left mx-auto lg:mx-0">
           <h2 className="text-3xl lg:text-4xl font-headline font-bold">Empowering Every Birth Registration</h2>
           <p className="text-muted-foreground text-base lg:text-lg">
-            OBRMS (Online Birthrate Monitoring System) is Nigeria's official digital initiative to ensure that every child born within the Federation is recognized, protected, and accounted for from day one.
+            OBRMS (Online Birthrate management System) is Nigeria's official digital initiative to ensure that every child born within the Federation is recognized, protected, and accounted for from day one.
           </p>
         </div>
 
@@ -196,7 +196,7 @@ export default function ResourcesPage() {
             />
           </div>
           <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest leading-relaxed">
-            Federal Ministry of Health & Population - OBRMS Online Birthrate Monitoring System v2.4
+            Federal Ministry of Health & Population - OBRMS Online Birthrate management System v2.4
           </p>
         </div>
       </footer>

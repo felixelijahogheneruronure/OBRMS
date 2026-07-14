@@ -1,7 +1,7 @@
-# Project Documentation: Online Birthrate Monitoring System (OBRMS)
+# Project Documentation: Online Birthrate management System (OBRMS)
 
 ## 1. Project Overview
-The **Online Birthrate Monitoring System (OBRMS)** is a specialized digital infrastructure designed to modernize and streamline the process of birth registration and population monitoring within Nigeria. The system serves as a bridge between medical facilities and the National Population Commission, ensuring that every birth is recorded, verified, and integrated into national statistics in real-time.
+The **Online Birthrate management System (OBRMS)** is a specialized digital infrastructure designed to modernize and streamline the process of birth registration and population management within Nigeria. The system serves as a bridge between medical facilities and the National Population Commission, ensuring that every birth is recorded, verified, and integrated into national statistics in real-time.
 
 ### 1.1 Purpose
 The primary objective of OBRMS is to solve the historical challenges of delayed birth reporting and inaccurate vital statistics. By providing a high-integrity, digital-first approach, the system empowers the government with "Live Population Intelligence" while granting citizens easy access to official documentation.
@@ -37,7 +37,7 @@ The application is built using a modern, industry-standard technology stack focu
 ### 3.4 Administrative Control
 *   **Role-Based Access:** Specialized views for Master Admins, Zonal Supervisors, and Verification Officers.
 *   **Session Personalization:** Dynamic extraction of administrator names from government emails to provide a personalized dashboard experience.
-*   **Security Monitoring:** Live system alerts and security logs to track unauthorized access attempts.
+*   **Security management:** Live system alerts and security logs to track unauthorized access attempts.
 
 ## 4. System Roles
 1.  **Public User:** Can view national statistics, growth trends, and informational resources.

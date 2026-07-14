@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ShieldCheck, ChevronRight } from "lucide-react";
+import { ShieldCheck, ChevronRight, Building2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HOSPITALS } from "@/lib/hospitals";
@@ -33,13 +33,14 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Extract name and store for the session
     const userName = extractNameFromEmail(email);
+    const selectedHospital = HOSPITALS.find(h => h.name === facility);
+    
     localStorage.setItem('obrms_user_name', userName);
     localStorage.setItem('obrms_user_email', email);
     localStorage.setItem('obrms_facility', facility);
+    localStorage.setItem('obrms_zone', selectedHospital?.zone || "Western");
 
-    // Simulate auth
     setTimeout(() => {
       router.push("/dashboard/admin");
     }, 1500);
@@ -65,8 +66,8 @@ export default function LoginPage() {
               <div className="h-12 w-px bg-border" />
               <div className="relative h-16 w-16">
                 <Image 
-                  src="/npc.png" 
-                  alt="National Population Commission" 
+                  src="/logo.png" 
+                  alt="OBRMS Logo" 
                   fill 
                   className="object-contain"
                   priority
@@ -74,26 +75,29 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="space-y-1">
-              <span className="text-2xl font-headline font-bold text-primary block tracking-tight">OBRMS Administration</span>
+              <span className="text-2xl font-headline font-bold text-primary block tracking-tight">OBRMS Hospital Portal</span>
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground">National Population Commission</span>
             </div>
           </Link>
-          <h1 className="text-3xl font-headline font-bold">Authorized Access</h1>
-          <p className="text-muted-foreground">Secure gateway for medical and administrative personnel.</p>
+          <h1 className="text-3xl font-headline font-bold">Facility Authorization</h1>
+          <p className="text-muted-foreground">Sign in to your hospital's registration gateway.</p>
         </div>
 
         <Card className="border-border shadow-2xl bg-card">
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>Select your facility and enter your administrative credentials.</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-primary" />
+              Staff Login
+            </CardTitle>
+            <CardDescription>Enter your credentials to manage birth records for your facility.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="facility">Medical Facility / Clinic</Label>
+                <Label htmlFor="facility">Your Medical Facility</Label>
                 <Select onValueChange={setFacility} required>
                   <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Search registered facilities..." />
+                    <SelectValue placeholder="Select your hospital..." />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
                     {zones.map(zone => (
@@ -114,11 +118,11 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Administrative Email</Label>
+                <Label htmlFor="email">Officer Email</Label>
                 <Input 
                   id="email" 
                   type="email" 
-                  placeholder="admin@obrms.gov.ng" 
+                  placeholder="name@hospital.gov.ng" 
                   className="h-12"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -140,7 +144,7 @@ export default function LoginPage() {
               </div>
 
               <Button type="submit" className="w-full h-12 text-lg font-bold gap-2" disabled={isLoading}>
-                {isLoading ? "Authenticating..." : "Access Dashboard"}
+                {isLoading ? "Verifying..." : "Access Hospital Dashboard"}
                 {!isLoading && <ChevronRight className="h-5 w-5" />}
               </Button>
             </form>
@@ -149,7 +153,7 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground uppercase tracking-widest font-bold">
           <ShieldCheck className="h-4 w-4 text-primary" />
-          Federal Security Protocol Active
+          End-to-End Encryption Enabled
         </div>
       </div>
     </div>

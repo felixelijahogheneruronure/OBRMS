@@ -84,7 +84,7 @@ export default function NationalAnalyticsPage() {
           <div className="space-y-2">
             <h2 className="text-3xl lg:text-4xl font-headline font-bold">Nigeria's Pulse</h2>
             <p className="text-muted-foreground max-w-2xl text-sm lg:text-base">
-              Real-time monitoring of population growth and birth activity across the Federation. Data sourced from 14,000+ verified medical facilities via OBRMS.
+              Real-time management of population growth and birth activity across the Federation. Data sourced from 14,000+ verified medical facilities via OBRMS.
             </p>
           </div>
           <PerSecondCounter />

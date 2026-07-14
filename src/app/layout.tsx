@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'OBRMS | Online Birthrate Monitoring System',
-  description: 'Official Online Birthrate Monitoring System for Nigeria. Real-time population intelligence and vital statistics.',
+  title: 'OBRMS | Online Birthrate management System',
+  description: 'Official Online Birthrate management System for Nigeria. Real-time population intelligence and vital statistics.',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
