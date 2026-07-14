@@ -32,8 +32,41 @@ export default function ParentPortal() {
     setTimeout(() => {
       const savedRegistrations = JSON.parse(localStorage.getItem('obrms_registrations') || '[]');
       
-      // Mock historical data search
+      // Detailed Mock historical data for Agbor/Nigeria
       const mockRecords = [
+        {
+          childName: "Chukwudi Divine Okoh",
+          dob: "February 10, 2025",
+          facility: "Agbor General Hospital",
+          id: "AG-BR-2025-8842",
+          gender: "Male",
+          motherName: "Blessing Okoh",
+          fatherName: "Emmanuel Okoh",
+          dateRegistered: "2025-02-11",
+          status: "Verified"
+        },
+        {
+          childName: "Eseoghene Joy Ijeh",
+          dob: "January 15, 2025",
+          facility: "Agbor General Hospital",
+          id: "AG-BR-2025-3319",
+          gender: "Female",
+          motherName: "Patience Ijeh",
+          fatherName: "Friday Ijeh",
+          dateRegistered: "2025-01-16",
+          status: "Verified"
+        },
+        {
+          childName: "Destiny Chukwuma Gbenoba",
+          dob: "December 20, 2024",
+          facility: "Agbor General Hospital",
+          id: "AG-BR-2024-1102",
+          gender: "Male",
+          motherName: "Mercy Gbenoba",
+          fatherName: "Kingsley Gbenoba",
+          dateRegistered: "2024-12-21",
+          status: "Verified"
+        },
         {
           childName: "Ifeanyi Chinedu Okeke",
           dob: "August 12, 2024",
@@ -49,6 +82,7 @@ export default function ParentPortal() {
 
       const allRecords = [...savedRegistrations, ...mockRecords];
       
+      // Search by ID and verify surname (if provided)
       const found = allRecords.find(record => 
         (record.id === regId || record.regId === regId)
       );
@@ -141,7 +175,7 @@ export default function ParentPortal() {
                     <Label htmlFor="regId">Registration ID</Label>
                     <Input 
                       id="regId" 
-                      placeholder="e.g. LG-BR-2024-XXXX" 
+                      placeholder="e.g. AG-BR-2025-XXXX" 
                       className="h-11"
                       value={regId}
                       onChange={(e) => setRegId(e.target.value)}
@@ -209,7 +243,7 @@ export default function ParentPortal() {
                 </CardContent>
                 <CardFooter className="bg-card/50 p-4 lg:p-6 flex flex-col sm:flex-row gap-3">
                   <Button className="w-full sm:flex-1 h-12 gap-2 text-lg" onClick={() => setIsPreviewOpen(true)}>
-                    <Download className="h-5 w-5" /> Download Certificate
+                    <Download className="h-5 w-5" /> View Certificate
                   </Button>
                   <Button variant="outline" className="h-12 w-full sm:w-12 p-0" onClick={() => setIsPreviewOpen(true)}>
                     <Printer className="h-6 w-6" />
@@ -222,7 +256,7 @@ export default function ParentPortal() {
           {!result && !isSearching && !error && (
             <div className="flex items-start gap-3 p-4 bg-secondary/20 rounded-lg text-sm text-muted-foreground">
               <AlertCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <p>Common OBRMS IDs look like <span className="font-mono text-primary font-bold">ST-BR-2024-XXXX</span>. Check your hospital handout if you can't find it.</p>
+              <p>Common Agbor OBRMS IDs look like <span className="font-mono text-primary font-bold">AG-BR-2025-XXXX</span>. Check your hospital documentation if you can't find it.</p>
             </div>
           )}
         </div>

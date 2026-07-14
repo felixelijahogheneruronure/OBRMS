@@ -113,7 +113,50 @@ export default function AdminDashboard() {
 
   const loadData = () => {
     const saved = JSON.parse(localStorage.getItem('obrms_registrations') || '[]');
-    setAllSubmissions(saved);
+    
+    // Seed with Agbor specific data if empty
+    const seedData = [
+      {
+        childName: "Chukwudi Divine Okoh",
+        dob: "2025-02-10",
+        facility: "Agbor General Hospital",
+        id: "AG-BR-2025-8842",
+        gender: "Male",
+        motherName: "Blessing Okoh",
+        fatherName: "Emmanuel Okoh",
+        dateRegistered: "2025-02-11",
+        zone: "Central"
+      },
+      {
+        childName: "Eseoghene Joy Ijeh",
+        dob: "2025-01-15",
+        facility: "Agbor General Hospital",
+        id: "AG-BR-2025-3319",
+        gender: "Female",
+        motherName: "Patience Ijeh",
+        fatherName: "Friday Ijeh",
+        dateRegistered: "2025-01-16",
+        zone: "Central"
+      },
+      {
+        childName: "Destiny Chukwuma Gbenoba",
+        dob: "2024-12-20",
+        facility: "Agbor General Hospital",
+        id: "AG-BR-2024-1102",
+        gender: "Male",
+        motherName: "Mercy Gbenoba",
+        fatherName: "Kingsley Gbenoba",
+        dateRegistered: "2024-12-21",
+        zone: "Central"
+      }
+    ];
+
+    if (saved.length === 0) {
+      localStorage.setItem('obrms_registrations', JSON.stringify(seedData));
+      setAllSubmissions(seedData);
+    } else {
+      setAllSubmissions(saved);
+    }
   };
 
   useEffect(() => {
