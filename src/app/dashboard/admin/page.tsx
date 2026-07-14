@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -14,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { RegistrationForm } from "@/components/dashboard/registration-form";
 import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
 import { BirthCertificateDocument } from "@/components/dashboard/birth-certificate-document";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -174,6 +173,9 @@ export default function AdminDashboard() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="p-6 w-64">
+                <SheetHeader className="text-left mb-8">
+                  <SheetTitle className="font-headline font-bold text-primary">Facility Menu</SheetTitle>
+                </SheetHeader>
                 <SidebarNav 
                   activeTab={activeTab} 
                   setActiveTab={setActiveTab} 
