@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -5,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ShieldCheck, ChevronRight, Building2 } from "lucide-react";
+import { ShieldCheck, ChevronRight, Building2, Lock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HOSPITALS } from "@/lib/hospitals";
@@ -15,9 +15,10 @@ import Image from "next/image";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [facility, setFacility] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const hospital = HOSPITALS[0]; // Agbor General Hospital
 
   const extractNameFromEmail = (email: string) => {
     const namePart = email.split('@')[0];
@@ -34,19 +35,16 @@ export default function LoginPage() {
     setIsLoading(true);
 
     const userName = extractNameFromEmail(email);
-    const selectedHospital = HOSPITALS.find(h => h.name === facility);
     
     localStorage.setItem('obrms_user_name', userName);
     localStorage.setItem('obrms_user_email', email);
-    localStorage.setItem('obrms_facility', facility);
-    localStorage.setItem('obrms_zone', selectedHospital?.zone || "Western");
+    localStorage.setItem('obrms_facility', hospital.name);
+    localStorage.setItem('obrms_zone', hospital.zone);
 
     setTimeout(() => {
       router.push("/dashboard/admin");
     }, 1500);
   };
-
-  const zones = ["Western", "Eastern", "Central", "Northern"];
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
@@ -75,50 +73,37 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="space-y-1">
-              <span className="text-2xl font-headline font-bold text-primary block tracking-tight">OBRMS Hospital Portal</span>
+              <span className="text-2xl font-headline font-bold text-primary block tracking-tight">OBRMS Staff Portal</span>
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground">National Population Commission</span>
             </div>
           </Link>
-          <h1 className="text-3xl font-headline font-bold">Facility Authorization</h1>
-          <p className="text-muted-foreground">Sign in to your hospital's registration gateway.</p>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-headline font-bold">{hospital.name}</h1>
+            <p className="text-muted-foreground">Authorized Access Only</p>
+          </div>
         </div>
 
         <Card className="border-border shadow-2xl bg-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5 text-primary" />
-              Staff Login
+              Staff Authentication
             </CardTitle>
-            <CardDescription>Enter your credentials to manage birth records for your facility.</CardDescription>
+            <CardDescription>Enter your official credentials to access the registration vault.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="facility">Your Medical Facility</Label>
-                <Select onValueChange={setFacility} required>
-                  <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Select your hospital..." />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
-                    {zones.map(zone => (
-                      <SelectGroup key={zone}>
-                        <SelectLabel className="bg-primary/5 text-primary sticky top-0 z-10">{zone} Zone</SelectLabel>
-                        {HOSPITALS.filter(h => h.zone === zone).map(h => (
-                          <SelectItem key={h.name} value={h.name}>
-                            <div className="flex flex-col text-left">
-                              <span className="font-medium">{h.name}</span>
-                              <span className="text-[10px] text-muted-foreground uppercase">{h.address}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="p-4 rounded-lg bg-primary/5 border border-primary/10 flex items-start gap-3">
+                <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-bold text-primary uppercase tracking-widest">Active Facility</p>
+                  <p className="text-sm font-medium">{hospital.name}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase">{hospital.address}</p>
+                </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Officer Email</Label>
+                <Label htmlFor="email">Medical Officer Email</Label>
                 <Input 
                   id="email" 
                   type="email" 
@@ -131,20 +116,23 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Security Password</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  placeholder="••••••••" 
-                  className="h-12"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <Label htmlFor="password">Security Token / Password</Label>
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    className="h-12 pl-10"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                </div>
               </div>
 
               <Button type="submit" className="w-full h-12 text-lg font-bold gap-2" disabled={isLoading}>
-                {isLoading ? "Verifying..." : "Access Hospital Dashboard"}
+                {isLoading ? "Authenticating..." : "Authorize Session"}
                 {!isLoading && <ChevronRight className="h-5 w-5" />}
               </Button>
             </form>
@@ -153,7 +141,7 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground uppercase tracking-widest font-bold">
           <ShieldCheck className="h-4 w-4 text-primary" />
-          End-to-End Encryption Enabled
+          Federal Security Protocol v2.4 Active
         </div>
       </div>
     </div>

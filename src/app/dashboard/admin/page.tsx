@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -14,39 +15,12 @@ import { RegistrationForm } from "@/components/dashboard/registration-form";
 import { RealTimeBirthHistogram } from "@/components/dashboard/real-time-birth-histogram";
 import { BirthCertificateDocument } from "@/components/dashboard/birth-certificate-document";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { HOSPITALS } from "@/lib/hospitals";
 import { cn } from "@/lib/utils";
 import { exportToCSV } from "@/lib/export-utils";
 import Image from "next/image";
 import Link from "next/link";
-
-const stateData = [
-  { name: 'Lagos', births: 14200, growth: 2.1 },
-  { name: 'Kano', births: 13800, growth: 1.8 },
-  { name: 'Oyo', births: 8400, growth: 0.5 },
-  { name: 'Rivers', births: 9100, growth: 3.1 },
-  { name: 'FCT', births: 7800, growth: 4.2 },
-  { name: 'Kaduna', births: 7600, growth: -0.2 },
-];
-
-const mockSubmissions = [
-  { 
-    facility: "Lagos Island Maternity Hospital", 
-    location: "Lagos State", 
-    id: "LG-BR-2024-1001", 
-    time: "12 mins ago",
-    childName: "Oluwaseun Adeyemi",
-    dob: "February 24, 2026",
-    gender: "Male",
-    motherName: "Blessing Adeyemi",
-    fatherName: "Olumide Adeyemi",
-    dateRegistered: "2026-02-24",
-    zone: "Western"
-  },
-];
 
 interface NavProps {
   activeTab: string;
@@ -99,20 +73,13 @@ const SidebarNav = ({ activeTab, setActiveTab, onItemClick, userName, hospitalNa
         >
           <FileText className="h-4 w-4" /> Issued Certificates
         </Button>
-        <Button 
-          variant={activeTab === "alerts" ? "secondary" : "ghost"} 
-          className={cn("justify-start gap-3", activeTab === "alerts" && "bg-primary/10 text-primary")}
-          onClick={() => { setActiveTab("alerts"); onItemClick?.(); }}
-        >
-          <Bell className="h-4 w-4" /> Notifications
-        </Button>
       </nav>
 
       <div className="mt-auto pt-6 border-t border-border flex flex-col gap-4">
         <div className="px-2">
           <div className="flex items-center gap-2 mb-2">
-            <Building2 className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-bold uppercase text-muted-foreground">Authorized Facility</span>
+            <ShieldCheck className="h-3 w-3 text-primary" />
+            <span className="text-[10px] font-bold uppercase text-muted-foreground">Secure Staff Access</span>
           </div>
           <p className="text-xs font-bold text-foreground leading-tight">{hospitalName}</p>
         </div>
@@ -142,12 +109,12 @@ export default function AdminDashboard() {
   const [isCertOpen, setIsCertOpen] = useState(false);
   const [globalSearchQuery, setGlobalSearchQuery] = useState("");
   const [userName, setUserName] = useState("Administrator");
-  const [hospitalName, setHospitalName] = useState("Lagos Island Maternity Hospital");
+  const [hospitalName, setHospitalName] = useState("Agbor General Hospital");
   const { toast } = useToast();
 
   const loadData = () => {
     const saved = JSON.parse(localStorage.getItem('obrms_registrations') || '[]');
-    setAllSubmissions([...saved, ...mockSubmissions]);
+    setAllSubmissions(saved);
   };
 
   useEffect(() => {
@@ -165,12 +132,10 @@ export default function AdminDashboard() {
   const filteredSubmissions = useMemo(() => {
     return allSubmissions.filter(sub => {
       const matchesSearch = 
-        sub.childName.toLowerCase().includes(globalSearchQuery.toLowerCase()) ||
-        sub.id.toLowerCase().includes(globalSearchQuery.toLowerCase());
+        sub.childName?.toLowerCase().includes(globalSearchQuery.toLowerCase()) ||
+        sub.id?.toLowerCase().includes(globalSearchQuery.toLowerCase());
       
-      // Filter for this hospital's records by default for local hospital view
       const matchesHospital = sub.facility === hospitalName;
-
       return matchesSearch && matchesHospital;
     });
   }, [allSubmissions, globalSearchQuery, hospitalName]);
@@ -234,7 +199,7 @@ export default function AdminDashboard() {
             </Button>
             <Button size="icon" variant="ghost" className="relative">
               <Bell className="h-4 w-4" />
-              <span className="absolute top-2 right-2 h-2 w-2 bg-primary rounded-full border-2 border-background" />
+              {filteredSubmissions.length > 0 && <span className="absolute top-2 right-2 h-2 w-2 bg-primary rounded-full border-2 border-background" />}
             </Button>
           </div>
         </header>
@@ -248,16 +213,16 @@ export default function AdminDashboard() {
                   <p className="text-muted-foreground text-sm lg:text-base">Managing local birth registrations and reporting.</p>
                 </div>
                 <Badge variant="outline" className="px-3 py-1 bg-emerald-50 text-emerald-700 border-emerald-200 uppercase tracking-widest font-bold text-[10px]">
-                  Connected to OBRMS Network
+                  Official Zonal Registry
                 </Badge>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {[
-                  { label: "Total Facility Births", value: filteredSubmissions.length.toLocaleString(), icon: TrendingUp, color: "text-primary" },
-                  { label: "Pending Uploads", value: "0", icon: Activity, color: "text-accent" },
+                  { label: "Total Hospital Births", value: filteredSubmissions.length.toLocaleString(), icon: TrendingUp, color: "text-primary" },
+                  { label: "Daily Registrations", value: filteredSubmissions.filter(s => s.dateRegistered === new Date().toISOString().split('T')[0]).length.toString(), icon: Activity, color: "text-accent" },
                   { label: "Certificates Printed", value: filteredSubmissions.length.toString(), icon: Baby, color: "text-accent" },
-                  { label: "Network Status", value: "Active", icon: ShieldCheck, color: "text-primary" },
+                  { label: "Security Status", value: "Locked", icon: ShieldCheck, color: "text-primary" },
                 ].map((stat, i) => (
                   <Card key={i} className="bg-card">
                     <CardHeader className="pb-2">
@@ -270,7 +235,7 @@ export default function AdminDashboard() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-headline">Recent Records at this Facility</CardTitle>
+                  <CardTitle className="font-headline text-lg">Recent Verified Records</CardTitle>
                   <CardDescription>Verified birth registrations originating from {hospitalName}.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -285,11 +250,11 @@ export default function AdminDashboard() {
                     </TableHeader>
                     <TableBody>
                       {filteredSubmissions.length > 0 ? (
-                        filteredSubmissions.map((sub, i) => (
+                        filteredSubmissions.slice(0, 5).map((sub, i) => (
                           <TableRow key={i}>
                             <TableCell className="font-bold">{sub.childName}</TableCell>
                             <TableCell className="font-mono text-xs text-primary">{sub.id}</TableCell>
-                            <TableCell><Badge variant="outline" className="text-[10px]">{sub.gender}</Badge></TableCell>
+                            <TableCell><Badge variant="outline" className="text-[10px] uppercase">{sub.gender}</Badge></TableCell>
                             <TableCell className="text-right">
                               <Button variant="ghost" size="sm" onClick={() => openCertificate(sub)} className="h-8 gap-2">
                                 <Printer className="h-4 w-4" /> Print
@@ -299,7 +264,7 @@ export default function AdminDashboard() {
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={4} className="h-32 text-center text-muted-foreground italic">No records found for this facility.</TableCell>
+                          <TableCell colSpan={4} className="h-32 text-center text-muted-foreground italic">No local records found. Start a new registration.</TableCell>
                         </TableRow>
                       )}
                     </TableBody>
@@ -330,18 +295,24 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredSubmissions.map((cert, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="font-mono text-xs font-bold text-primary">{cert.id}</TableCell>
-                          <TableCell className="font-bold">{cert.childName}</TableCell>
-                          <TableCell className="text-xs">{cert.dateRegistered}</TableCell>
-                          <TableCell className="text-right">
-                            <Button size="sm" onClick={() => openCertificate(cert)} className="h-8 gap-2">
-                              <Printer className="h-4 w-4" /> Print
-                            </Button>
-                          </TableCell>
+                      {filteredSubmissions.length > 0 ? (
+                        filteredSubmissions.map((cert, i) => (
+                          <TableRow key={i}>
+                            <TableCell className="font-mono text-xs font-bold text-primary">{cert.id}</TableCell>
+                            <TableCell className="font-bold">{cert.childName}</TableCell>
+                            <TableCell className="text-xs">{cert.dateRegistered}</TableCell>
+                            <TableCell className="text-right">
+                              <Button size="sm" onClick={() => openCertificate(cert)} className="h-8 gap-2">
+                                <Printer className="h-4 w-4" /> Print
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} className="h-32 text-center text-muted-foreground italic">No certificates found to list.</TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </CardContent>
